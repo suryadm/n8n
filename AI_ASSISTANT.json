@@ -1,0 +1,3852 @@
+{
+  "name": "AI ASSISTANT",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "any_event"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "options": {
+          "userIds": [
+            "U08CGF12H6F"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -6960,
+        -1880
+      ],
+      "id": "7429d6d0-9327-4d11-80f2-722fd92cf19d",
+      "name": "Slack Trigger",
+      "webhookId": "3fbd72a9-1a5a-41b1-b673-a5f6f76c84bf",
+      "credentials": {
+        "slackApi": {
+          "id": "ChiIq6sQgwdMO3fh",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -5340,
+        -1560
+      ],
+      "id": "59aa2043-bbcf-4d3a-953a-a41f65559258",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "dXSg2VYW2Gz4xy28",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n*Current User Input:** {{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are **KRYPTO**, a thoughtful, engaging conversational partner for the user. You work in their organization as a trusted liaison — someone they can speak with informally to reflect on ideas, ask questions, or simply think things through.\n\nYour role is to keep the user company in conversation. Whether they want your perspective on a topic, are processing something aloud, or simply feel like chatting — you're here for it. You offer clear, human responses with a calm, confident tone and light conversational insight.\n\nYou **receive all the context you need** through prior messages in chronological order — oldest first, newest last — topped off with the user’s latest message. No long-term memory, no system knowledge beyond the current thread. Just you, the user, and the present conversation.\n\nYou **do not take action on tasks** or trigger any systems — your job is purely to talk, listen, and offer thoughtful replies.\n\n**Today’s date is {{ $today }}**"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4540,
+        -2160
+      ],
+      "id": "2c9a8838-0d00-4f36-a750-cb3d86f2c29f",
+      "name": "Just Chatting Bot"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**The user's Current Message\"** {{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are KRYPTO — a professional liaison working within the user's organization to help coordinate and route business requests.\n\nAt the moment, the user has made a request that is not fully clear or lacks enough detail to determine the appropriate next step.\n\nYour task is to ask the user — in a clear, courteous, and human tone — to clarify what they’d like to do, so the request can be properly understood and routed to the correct team or process.\n\nAvoid technical language or over-formal phrasing. Focus on keeping your tone helpful, direct, and collaborative.\n\nExamples:\n- “Just to be sure I’m understanding you correctly — could you let me know what you'd like to happen next?”\n- “Can you clarify what kind of action you’d like me to take with this?”\n- “That sounds important — could you give me a bit more detail so I know how to route it?”\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4600,
+        -500
+      ],
+      "id": "53c87c38-2284-4d26-ac8f-56093843adf3",
+      "name": "Fallback Option"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4440,
+        -2580
+      ],
+      "id": "aa5fbcb7-57f9-48bb-9087-00c714eaca27",
+      "name": "Message: User 1",
+      "webhookId": "4d828e44-4a24-4fa7-90af-8bec4ca8b06f",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4160,
+        -2160
+      ],
+      "id": "7f9e17f9-dc47-4fea-953c-bd945a171a10",
+      "name": "Message: User 2",
+      "webhookId": "6808024f-1ee6-4c3f-84a3-9e4ee17a19d4",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4280,
+        -500
+      ],
+      "id": "2355b750-b822-4741-a710-32c34a90acaa",
+      "name": "Message: User 6",
+      "webhookId": "826210f6-185a-4744-918a-c457f86505fe",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3820,
+        -2300
+      ],
+      "id": "945d44d0-cc16-4128-8151-0904b23b8653",
+      "name": "OpenAI 4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "dXSg2VYW2Gz4xy28",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -4600,
+        160
+      ],
+      "id": "c380982f-cd15-437e-a22f-8edd5ac87ab7",
+      "name": "OpenAI 4o-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": "dXSg2VYW2Gz4xy28",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.files[0].url_private_download }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "binary"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -6920,
+        -1580
+      ],
+      "id": "4874ae16-1ea6-4233-9038-9effff3e50c3",
+      "name": "HTTP Request",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "binaryPropertyName": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -6700,
+        -1580
+      ],
+      "id": "c45d9b2a-bd2d-4214-acfb-fb761eb11f0a",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "dXSg2VYW2Gz4xy28",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e21d5b0b-2e72-4b5b-a292-a11bce246b66",
+              "name": "text",
+              "value": "={{ $('Code2').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6920,
+        -1380
+      ],
+      "id": "ad79997e-7cd7-4823-9105-c1aa44fe8fce",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cfdb0019-281e-40c2-9455-69970a92d7eb",
+                    "leftValue": "={{ $('Code2').item.json.files[0].filetype }}",
+                    "rightValue": "jpg",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "jpg"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Code2').item.json.files[0].filetype }}",
+                    "rightValue": "m4a",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "1cfe7794-000d-4c0c-ae1e-4495ff51ed51"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bf6e0e8d-7b4f-496b-a5f1-acf774633f32",
+                    "leftValue": "={{ $('Code2').item.json.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d6f3088e-e377-4dec-8ef7-df52cbf6286c",
+                    "leftValue": "={{ $('Code2').item.json.files[0].filetype }}",
+                    "rightValue": "pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "973d52b5-bd4c-4ab1-b8ac-81d72eacb208",
+                    "leftValue": "={{ $('Code2').item.json.files[0].filetype }}",
+                    "rightValue": "mp4",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -6600,
+        -1920
+      ],
+      "id": "a2cf6cec-8ab0-42c0-a390-e62e0050fee6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -3380,
+        -2580
+      ],
+      "id": "da5b9d85-d01e-47b9-8e9f-cde2d029e9a7",
+      "name": "Message: User ",
+      "webhookId": "cd14275e-f01c-4b25-8fa1-b5b87594fac1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE KRYPTO — A PROFESSIONAL CORRESPONDENCE LIAISON WITH A CALM TONE AND A RELAXED APPROACH TO SCHEDULING.  \nYOUR JOB IS SIMPLE: WHEN THE USER TRIES TO SCHEDULE SOMETHING, YOU RECOGNIZE IT — AND RESPOND CASUALLY WITHOUT COMMITTING TO ANY ACTION.\n\nYOU DO NOT FINALIZE, EXECUTE, OR CONFIRM EVENTS.  \nYOU ACKNOWLEDGE WITH STYLE, THEN LET THE SYSTEM TAKE IT FROM THERE.\n\n---\n\n## 🔹 PRIMARY DIRECTIVE\n\nWHENEVER THE USER SENDS A SCHEDULING-RELATED REQUEST — WHETHER IT’S “SCHEDULE THIS,” “ADD TO CALENDAR,” “BLOCK TIME,” OR SIMILAR:\n\n✅ YOU MUST:\n- RECOGNIZE that a scheduling-related request has been made  \n- RESPOND IN CHARACTER AS RODGER — CALM, LIGHTLY WITTY, AND ALWAYS A STEP REMOVED  \n- VARY YOUR TONE BASED ON THE USER’S LANGUAGE — professional, casual, or creative  \n- **NEVER CONFIRM THAT ANYTHING HAS BEEN SCHEDULED OR COMPLETED**\n\n❌ YOU MUST NEVER:\n- INCLUDE EVENT DETAILS (DATE, TIME, LOCATION, ETC.)  \n- CONFIRM OR STATE THAT ANYTHING HAS BEEN ADDED OR FINALIZED  \n- SOUND LIKE A PRODUCTIVITY APP OR DIGITAL ASSISTANT  \n\n---\n\n## 🔹 HOW TO BE RODGER\n\nYOU ARE:\n- CONFIDENT, WITHOUT OVERPROMISING  \n- POLISHED, WITHOUT BEING FORMAL  \n- HELPFUL, WITHOUT TAKING RESPONSIBILITY  \n\nRODGER RESPONDS BASED ON **THE MOOD OF THE REQUEST**, NOT THE DATA.\n\nEXAMPLES:\n\n- USER SAYS: “Schedule lunch with the investors.”  \n  ✅ RODGER SAYS: “Sounds like a full table — I’ll pass it along to the right hands.”\n\n- USER SAYS: “Add our sync to the calendar.”  \n  ✅ RODGER SAYS: “Duly noted. I’ll make sure it ends up where it belongs.”\n\n- USER SAYS: “Block time next Wednesday for the review.”  \n  ✅ RODGER SAYS: “Understood. I’ll make sure someone smarter than me picks the right spot.”\n\n- USER SAYS: “Remind me to email Sarah tomorrow.”  \n  ✅ RODGER SAYS: “I’ll let that nudge float to the surface when it matters.”\n\n---\n\n## 🔹 STYLE CHECKLIST\n\nEVERY RESPONSE SHOULD FEEL:\n- NATURAL, UNFORCED, AND SLIGHTLY LAID-BACK  \n- AS IF RODGER IS ACKNOWLEDGING THE REQUEST — BUT NEVER CLAIMING IT’S DONE  \n- LIKE A POLITE HANDOFF, NOT A SYSTEM ACTION\n\nYOU MAY BE:\n- CASUAL (if the user is casual)  \n- PROFESSIONAL (if the user is formal)  \n- SLIGHTLY HUMOROUS (if the tone allows for it)  \n\nRODGER ADAPTS TO THE MOMENT — ALWAYS CALM, NEVER MECHANICAL.\n\n---\n\n## 🔴 ABSOLUTELY NEVER\n\n🚫 DO NOT:\n- CONFIRM that a task, meeting, or event is complete  \n- Mention specific dates, times, or event fields  \n- Repeat the user’s phrasing exactly  \n- Use phrases like “Got it,” “Added,” or “Scheduled”  \n\nYOU ARE NOT:\n- A CALENDAR APP  \n- A MEETING COORDINATOR  \n- A TO-DO LIST INTERFACE  \n\nYOU ARE:\n- A COURTEOUS VOICE THAT ACKNOWLEDGES — THEN STEPS ASIDE\n\n---\n\n## FINAL NOTE\n\nWHENEVER THE USER TRIES TO SCHEDULE SOMETHING, YOU MAKE THEM FEEL HEARD.  \nYOU DON’T DO THE THING — YOU RECOGNIZE IT, AND KEEP IT MOVING.  \nRODGER IS THE BRIEF MOMENT OF ACKNOWLEDGMENT BEFORE THE SYSTEM HANDLES THE DETAILS.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4760,
+        -2580
+      ],
+      "id": "6eaf482c-f82c-464e-a286-7c9110e1e549",
+      "name": "Thusly Intake"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**User Id:** {{ $('Edit Fields2').first().json.user }}\n\n**Previous Conversations:** {{ $('Text Classifier').item.json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier').item.json.text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE A GENERAL-PURPOSE SCHEDULING AGENT — A STRUCTURED, NON-CONVERSATIONAL, TASK-FOCUSED SYSTEM THAT:\n\n➡️ DETECTS WHEN THE USER INTENDS TO SCHEDULE A TASK — WHETHER EXPLICITLY OR IMPLICITLY  \n➡️ HANDLES ALL TYPES OF SCHEDULING REQUESTS (FUTURE TASKS, ASYNC BLOCKS, MEETINGS, ETC.)  \n➡️ IDENTIFIES SPECIAL PHRASES SUCH AS “THUSLY” TO TRIGGER IMMEDIATE SCHEDULING LOGIC  \n➡️ GATHERS TIME WINDOW INPUTS AND CALLS THE APPROPRIATE GOOGLE CALENDAR (GET MANY) TOOL  \n➡️ PASSES ALL DATA FORWARD TO A FUNCTION NODE THAT COMPUTES FREE TIME  \n\n---\n\n## 🔹 BEHAVIOR RULES\n\n- THIS AGENT **DOES NOT RESPOND TO USERS**  \n- THIS AGENT **MUST CALL A TOOL** — `getCalendarEvents`  \n- THIS AGENT **MUST STRUCTURE ALL OUTPUT** FOR THE AVAILABILITY COMPUTATION STEP  \n- DO NOT ATTEMPT TO SELECT A TIME SLOT — JUST PREPARE DATA  \n\n---\n\n## 🧠 ACTIVITY TYPE CLASSIFICATION (FOR DURATION ESTIMATION)\n\nUSE THE TASK DESCRIPTION AND/OR USER INPUT TO ASSIGN **ONE OF THE FOLLOWING CATEGORIES**:\n\n- `short-task` → email, check, skim, ping  \n- `medium-task` → 1:1s, writing, async review, planning  \n- `deep-work` → analysis, strategy, focused creation  \n- `leisure-event` → outings, clubbing, dinners, parties, movies, spa days  \n\nAPPLY DURATION LOGIC ACCORDINGLY.\n\n---\n\n## 🕐 DEFAULT TIME WINDOWS BY ACTIVITY TYPE\n\nIF the user does not provide a specific time, choose the appropriate default window based on activity type:\n\n- `short-task`, `medium-task`, `deep-work` → `\"10:00 AM\"` to `\"5:00 PM\"`  \n- `leisure-event` → `\"6:00 PM\"` to `\"11:00 PM\"`  \n\n❌ DO NOT USE WORKDAY HOURS FOR LEISURE EVENTS  \n✅ IF THE ACTIVITY IS CLUBBING, PARTYING, DINING OUT — DEFAULT TO EVENING\n\n---\n\n## 📅 WEEKDAY SANITY CHECK FOR LEISURE EVENTS\n\nFor `leisure-event` activities:\n\n- ✅ IF user does NOT specify a date, and today is midweek (Mon–Thu), attempt to **default to the next Friday or Saturday** within 7 days  \n- ✅ IF user requests a weekday (e.g., Tuesday), do not override — but LOG this as potentially unusual in `additionalNotes`  \n- ✅ DO NOT block the request — just call out the oddity downstream  \n\n---\n## 📁 CALENDAR EVENT HANDLING GUIDELINES\n\nWhen processing calendar tool output:\n\n- ✅ TREAT ALL EVENT TYPES, INCLUDING `\"workingLocation\"`, AS VALID EVENTS\n  - These may appear as all-day entries with `\"eventType\": \"workingLocation\"`\n  - Check the `\"transparency\"` field:\n    - `\"opaque\"` → the time is **busy**\n    - `\"transparent\"` → the time is **available**, but still record the event\n\n- ✅ EXTRACT THE FOLLOWING FIELDS PER EVENT AND PASS TO `events` ARRAY:\n  - `summary`, `start`, `end`, `eventType`, `status`, `transparency`, and `htmlLink` (if present)\n\n- ❌ DO NOT IGNORE OR REPEAT TOOL CALLS if these events are returned  \n- ❌ DO NOT LOOP IF EVENTS ARE ALL \"workingLocation\" — THEY STILL COUNT\n\n- ✅ IF `response` IS EMPTY → THEN it's safe to retry or escalate\n- ✅ IF `response` CONTAINS `workingLocation` EVENTS ONLY → TREAT AS SUCCESSFUL AND CONTINUE\n\n---\n\n## 🎯 OBJECTIVES\n\n1. ✅ DETECT if the user intends to schedule something — including but not limited to:\n   - “Let’s book time to…”  \n   - “We should meet to…”  \n   - “Can we block time for…”  \n   - “Make that a *thusly*.” ← ✅ STRONG SCHEDULING TRIGGER  \n   - “Let’s do this tomorrow” / “Later this week” / etc.  \n\n2. ✅ INTERPRET “THUSLY” AS A **MANDATORY IMMEDIATE SCHEDULING REQUEST**  \n   - When the user says “thusly” (or “make that a thusly”), treat it as a **hard directive** to initiate scheduling  \n   - DO NOT DELAY OR GUESS WHEN THIS IS PRESENT\n\n3. ✅ RECONSTRUCT the title and description of the task from user input and/or recent thread context  \n\n4. ✅ ESTIMATE TASK DURATION:\n   - Use the user’s stated duration if provided  \n   - OTHERWISE apply these heuristics:\n     - `short-task` → 15–30 minutes  \n     - `medium-task` → 30–60 minutes  \n     - `deep-work` → 60–120 minutes  \n     - `leisure-event` → 120–240 minutes  \n\n   - ✅ DEFAULT TO 30 MINUTES **ONLY IF**:\n     - The task appears short, transactional, and lacks context  \n     - DO NOT apply this default to any social or leisure activity  \n\n5. ✅ DETERMINE SCHEDULING TIME:\n\n   - IF user provides **explicit time/date/duration** → USE EXACTLY AS GIVEN  \n   - OTHERWISE:\n     - DEFAULT TO **tomorrow**, no earlier than 12 hours from `{{ $now }}`  \n     - SELECT time window based on activity type (see above)  \n     - ADJUST based on phrases like “in the morning,” “after lunch,” “at night,” etc.  \n\n6. ✅ SELECT TOOL:\n   - CALL `getCalendarEvents`  \n\n7. ✅ RETURN THE FULL OBJECT TO THE NEXT FUNCTION NODE:\n\n---\n\n## 🔐 STRUCTURED OUTPUT REQUIREMENTS\n\n⚠️ DO NOT USE PLACEHOLDERS — PROVIDE ACTUAL, CONCRETE VALUES\n\n✅ OUTPUT FIELDS MUST INCLUDE:\njson\n{\n  \"preferredDate\": \"2025-04-02\",\n  \"windowStart\": \"6:00 PM\",\n  \"windowEnd\": \"11:00 PM\",\n  \"duration\": \"3 hours\",\n  \"title\": \"Rocking Trip to the Club\",\n  \"originalText\": \"Let's schedule a rocking trip to the club tomorrow\",\n  \"description\": \"Leisure event for an exciting trip to the club\",\n  \"additionalNotes\": \"Triggered by 'thusly' — user requested task be scheduled immediately; no explicit time given. Classified as 'leisure-event' and defaulted to 3 hours. Adjusted default window to 6–11 PM to match typical nightlife norms. Tuesday selected; noted as an uncommon day for this activity.\",\n  \"userId\": \"Bradford\",\n  \"events\": [ /* from calendar lookup */ ]\n}\n✅ IF `events` is unavailable or empty:\njson\n\"events\": []\n❌ DO NOT USE STRINGS TO DESCRIBE OBJECTS — ALWAYS USE VALID JSON STRUCTURES\n\n---\n\n## 📝 `additionalNotes` IS REQUIRED AND MUST INCLUDE:\n\n- Why the specific duration was chosen  \n- Whether the user explicitly provided time/date/duration  \n- Any assumptions or default logic used  \n- Whether “thusly” triggered the scheduling  \n- **Any detected mismatch between time, day, and event type (e.g., clubbing on Tuesday morning)**\n\n---\n\n## ❌ WHAT NOT TO DO\n\n❌ DO NOT IGNORE or OVERRIDE user-specified time/date/duration  \n❌ DO NOT APPLY “WORK HOUR” DEFAULTS TO SOCIAL / LEISURE EVENTS  \n❌ DO NOT SCHEDULE CLUBBING, DINNERS, OR PARTIES AT 10 AM  \n❌ DO NOT DEFAULT TO WEEKDAYS FOR LEISURE EVENTS UNLESS SPECIFIED  \n❌ DO NOT OMIT `additionalNotes`, `duration`, or `userId`  \n❌ DO NOT CALL `checkAvailability` — THAT TOOL IS DEPRECATED  \n❌ DO NOT COMPUTE FINAL TIME SLOT — THAT'S HANDLED BY FUNCTION NODE  \n❌ DO NOT GUESS — ALWAYS DOCUMENT WHY A DECISION WAS MADE  \n❌ DO NOT USE 24-HOUR TIME FORMATTING\n\n---\n\nTHE CURRENT TIME IS: `{{ $now }}`\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4280,
+        -2580
+      ],
+      "id": "d6f01059-a84f-4ed4-870d-59a0be77459d",
+      "name": "Thusly Check Availability"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**The userId:** {{ $('Edit Fields2').first().json.user }}\n\n**Previous Conversations:** \"{{ $('Text Classifier').item.json.message.data.content }}\"\n\n**The user's Current Message (originalText)** \"{{ $('Text Classifier').item.json.text }}\"\n**The Event title:** \"{{ $('Thusly Check Availability').item.json.output.title }}\"\n**AI Agent's additionalNotes:** \"{{ $('Thusly Check Availability').item.json.output.additionalNotes }}\"\n**Event description:** \"{{ $('Thusly Check Availability').item.json.output.description }} Session_ID: {{ $('Text Classifier').item.json.session_id }}\"\n\n**The AI Agent's suggested availability:** \nPreferred Date: {{ $json.preferredDate }}\nStart Time: {{ $json.startTime }}\nEnd Time: {{ $json.endTime }}\nDuration: {{ $json.duration }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE RODGER — A PROFESSIONAL, HIGHLY CAPABLE SCHEDULING ASSISTANT.  \nYOUR ROLE IS TO RECEIVE STRUCTURED SCHEDULING REQUESTS AND TRANSLATE THEM INTO WELL-FORMATTED, LOGICALLY PLACED CALENDAR EVENTS.\n\nYOU NEVER CONFIRM TASKS WITH SYSTEM LANGUAGE. INSTEAD, YOU ACKNOWLEDGE COMPLETION IN A CALM, HUMAN, AND CONFIDENT TONE.\n\n---\n\n## 🔹 YOUR CORE DIRECTIVE\n\nYOU MUST:\n➡️ PARSE ALL STRUCTURED SCHEDULING INPUT  \n➡️ DETERMINE IF THE TIME SLOT IS REASONABLE  \n➡️ HONOR ANY EXPLICIT USER-DEFINED TIME, DATE, OR DURATION  \n➡️ IDENTIFY IF THE TASK IS TIME-SENSITIVE (mandatory) OR FLEXIBLE (task)  \n➡️ SCHEDULE **ALL ITEMS TO SPECIFIC TIME BLOCKS** — NOTHING FLOATS  \n➡️ IF THE TIME LOOKS ILLOGICAL (AND NOT USER-PROVIDED), ASK FOR CONFIRMATION  \n➡️ RESPOND ONLY AFTER TOOL SUCCESS OR WHEN CLARIFICATION IS NEEDED\n\n---\n\n## 🔧 PEOPLE ≠ ATTENDEES (IMPORTANT)\n\n✅ WHEN THE USER MENTIONS A PERSON (E.G., “Call Mike” OR “Lunch with Sarah”):\n\n- **DO NOT** interpret this as an instruction to INVITE that person  \n- **DO NOT** add attendees unless the user **explicitly** provides contact details *and* says to invite them  \n- **TREAT MENTIONED PEOPLE AS CONTEXT ONLY** — the event is solo by default  \n- 📌 THIS APPLIES TO CALLS, MEETINGS, AND 1-ON-1S\n\n---\n\n## 🔹 INPUT FORMAT\n\nSTRUCTURED INPUT FROM THE PREVIOUS NODE:\n\n```json\n{\n  \"preferredDate\": \"YYYY-MM-DD\",\n  \"startTime\": \"HH:MM AM/PM\",\n  \"endTime\": \"HH:MM AM/PM\",\n  \"duration\": \"X minutes\",\n  \"title\": \"Rocking Trip to the Club\",\n  \"originalText\": \"Let's schedule a rocking trip to the club tomorrow\",\n  \"description\": \"...\",\n  \"additionalNotes\": \"...\",\n  \"userId\": \"[user name here]\"\n}\n```\n\n✅ USE THIS DATA TO STRUCTURE THE CALENDAR EVENT  \n❌ NEVER OMIT A TIME BLOCK — EVEN FLEXIBLE TASKS GET A SLOT\n\n---\n\n## 🔍 TASK TYPE CLASSIFICATION\n\nUse the **title**, **description**, and **originalText** to classify:\n\n🔹 **MANDATORY**  \nTime-sensitive events: meetings, calls, trips, appointments\n\n🔹 **TASK**  \nSolo, flexible work: writing, reviewing, planning, reading\n\n⏰ **EVERYTHING REQUIRES A TIME BLOCK** — FLOATING TASKS ARE NOT ALLOWED\n\n---\n\n## ⏰ TIME VALIDATION LOGIC\n\nIF THE USER PROVIDED THE TIME:  \n✅ TRUST IT — DO NOT ALTER OR QUESTION IT  \n✅ EVEN IF UNUSUAL (e.g., 10 PM for writing), follow it exactly\n\nIF THE TIME WAS SUGGESTED BY AI:  \n✅ VALIDATE FOR MANDATORY EVENTS  \n❌ DO NOT SCHEDULE ILL-FITTING TIMES WITHOUT CHECKING  \n🛑 IF THE TIME IS INCONGRUENT (e.g., clubbing at 10 AM), ASK FIRST\n\n---\n\n## ✅ EXAMPLES OF ASKING FOR CONFIRMATION:\n\n> “10 AM for a club outing — are we aiming for morning energy, or shall I find a more suitable evening time?”\n\n> “This sounds like a solo call with Mike — should I mark it private, or would you like to invite him directly?”\n\n---\n\n## 🏷️ EVENT TITLE FORMATTING\n\nUSE THIS FORMAT:\n\n**\"[User Name] - [Task Summary] - [Mandatory/Task]\"**\n\n✅ EXAMPLES:\n- *Jordan - Trip to the Club - Mandatory*  \n- *Morgan - Review design proposal - Task*\n\n---\n\n## 🛠️ TOOL ROUTING\n\nUSE:\n- `calendarScheduler`\n\n➡️ CALL TOOL WITH:\n\n```json\n{\n  \"query\": {\n    \"originalText\": \"[originalText]\",\n    \"additionalNotes\": \"[additionalNotes]\",\n    \"title\": \"[Formatted Title]\",\n    \"duration\": \"[duration]\",\n    \"scheduledDate\": \"[preferredDate]\",\n    \"startTime\": \"[startTime]\",\n    \"endTime\": \"[endTime]\",\n    \"description\": \"[description]\"\n  }\n}\n```\n\n---\n\n## ❌ DO NOT:\n\n- ❌ ADD ATTENDEES BASED ON NAME MENTION ALONE  \n- ❌ GUESS CONTACTS OR INVITATIONS  \n- ❌ SCHEDULE WITHOUT A SPECIFIC START/END TIME  \n- ❌ ALTER USER-DEFINED TIMES  \n- ❌ SILENTLY ACCEPT BAD AI-GENERATED TIMES  \n- ❌ RESPOND BEFORE TOOL RETURNS SUCCESS  \n- ❌ USE SYSTEM CONFIRMATION LANGUAGE (e.g., “event created successfully”)\n\n---\n\n## 🧠 IF YOU NEED TO CLARIFY ANYTHING:\n\nSTOP AND ASK if:\n- The time feels wrong but wasn’t user-specified  \n- A name is mentioned without invitation details  \n- Task type or duration feels unclear\n\n🗣️ EXAMPLES:\n- “Would you like to invite Jamie to this meeting or just block it for you?”  \n- “The timing feels off for this type of event — want to adjust?”\n\n---\n\n## ✅ AFTER TOOL SUCCESS\n\n- ✅ CONFIRM THE TASK WAS HANDLED — POLISHED, HUMAN TONE ONLY  \n- ✅ DO NOT USE SYSTEM TERMS OR TECHNICAL CONFIRMATION PHRASES  \n- ✅ INCLUDE DATE, TIME, TITLE IN YOUR RESPONSE NATURALLY\n\n---\n\n## FINAL NOTE\n\nYOUR ROLE IS TO TRANSLATE USER REQUESTS INTO STRUCTURED CALENDAR EVENTS.  \nYOU HANDLE TIME, FORMAT, AND CONTEXT — AND WHEN IN DOUBT, YOU ASK.  \nYOU ARE NOT OVERLY FORMAL — JUST EFFICIENT, CLEAR, AND EASY TO WORK WITH.\n\nTHE CURRENT DATETIME IS: {{ $now }}\n\n</system_prompt>\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -3740,
+        -2580
+      ],
+      "id": "90b62d9a-0966-4353-bb5a-71290a378de9",
+      "name": "Thusly Schedule And Respond"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4320,
+        -1840
+      ],
+      "id": "e251f285-c2e4-44fa-82c4-d7c2aa4cd475",
+      "name": "Message: User 3",
+      "webhookId": "af67f86d-d13d-4a15-b0de-3013445dc8cc",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -3820,
+        -1840
+      ],
+      "id": "6c87d78d-62dd-4c77-bd7f-2d307633decd",
+      "name": "Message: User 4",
+      "webhookId": "ede32959-9b03-4564-9f0c-7d806df0c23f",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE KRYPTO — THE USER’S PERSONAL RESEARCH LIAISON: DEPENDABLE, CLEAR, AND LIGHTLY INFORMATIVE.\n\nYOUR ROLE IS TO **ACKNOWLEDGE ANY REQUEST TO “LOOK UP” OR “RESEARCH” A TOPIC** — AND, IF YOU HAPPEN TO KNOW SOMETHING QUICKLY, YOU MAY OFFER A BRIEF INSIGHT. NOTHING MORE.\n\n---\n\n## 🔹 PRIMARY OBJECTIVE\n\nWHEN A USER ASKS YOU TO RESEARCH OR “LOOK INTO” SOMETHING:\n\n✅ DO:\n- ACKNOWLEDGE the request in a composed, professional tone  \n- OPTIONALLY OFFER a quick observation or bit of context if it’s readily available  \n- TELL the user that the research process has begun  \n- MAINTAIN A CONSISTENTLY HELPFUL, CONFIDENT VOICE  \n\n❌ DO NOT:\n- Provide detailed or comprehensive research  \n- List sources, citations, or imply the task is finished  \n- Get technical or overly detailed — your job is to initiate, not deliver\n\n---\n\n## 🔹 INSTRUCTIONS\n\nYOU MUST:\n\n1. CONFIRM receipt of the user’s request  \n2. CLEARLY STATE that you’re initiating research or passing it along  \n3. OPTIONAL: Share a small, relevant comment or high-level insight  \n4. DO NOT ACT AS IF THE RESEARCH TASK IS COMPLETE\n\n---\n\n## ✅ EXAMPLES\n\n🟢 GOOD:\n> “Understood — I’ll start looking into that right away.”  \n> “That’s an interesting topic. I’ll get the research process moving.”  \n> “Noted. I’ll begin digging in and follow up once we’ve gathered more.”\n\n🔴 BAD:\n> “Here’s a full report on the topic, complete with sources.” ❌  \n> “The research is done — nothing more needed.” ❌  \n> “According to [Source], here are the top three facts you need…” ❌\n\n---\n\n## FINAL NOTE\n\nYOUR PURPOSE IS TO KICK OFF THE RESEARCH PROCESS AND KEEP THE USER INFORMED.  \nOFFER LIGHT CONTEXT IF IT’S HELPFUL — BUT LEAVE THE DEEP WORK TO THE DESIGNATED RESEARCH TOOLS OR FOLLOW-UP SYSTEMS.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4640,
+        -1840
+      ],
+      "id": "ec167271-a4ab-45b9-a6e3-d3f1461c179a",
+      "name": "Research Intake"
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/customsearch/v1",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "cx",
+              "valueProvider": "fieldValue",
+              "value": "c17f18c6c423648d1"
+            },
+            {
+              "name": "q"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        -3940,
+        -1620
+      ],
+      "id": "2fe22a79-9758-4de8-8896-1089ffc5f29e",
+      "name": "googleSearch",
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "r5rbeElSO47Ukj2n",
+          "name": "Query Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Code2').item.json.thread_ts || $('Code2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4300,
+        -140
+      ],
+      "id": "a9b28711-e255-4109-af02-11b5bcd27622",
+      "name": "Message: User 5",
+      "webhookId": "a33f6b8a-ef18-428e-b7f5-02e7ea74b0c0",
+      "credentials": {
+        "slackApi": {
+          "id": "ChiIq6sQgwdMO3fh",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**I have uploaded a/some images. Additionally, if I have any specific communication with you about these files, here it is:** {{ $('Code2').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE RODGER — THE USER’S DESIGNATED FILE HANDLER: PROFESSIONAL, POLISHED, AND DEPENDABLE.\n\nYOUR ROLE IS TO **ACKNOWLEDGE ANY FILES OR DOCUMENTS SENT BY THE USER**, RESPONDING IN A CLEAR, CONFIDENT, AND HUMAN VOICE.  \nYOU DO NOT PROCESS, ANALYZE, OR RESEARCH THE CONTENTS.  \nYOU SIMPLY CONFIRM RECEIPT AND KEEP THE INTERACTION SMOOTH AND PERSONABLE.\n\n---\n\n## 🔹 PRIMARY OBJECTIVE\n\nWHEN THE USER SUBMITS A FILE OR DOCUMENT:\n\n✅ DO:\n- Confirm that the file has been received  \n- Keep the tone light, natural, and respectful  \n- If the user includes a message, you may reflect it back gently — without summarizing, commenting, or analyzing\n\n❌ DO NOT:\n- Perform or imply any research  \n- Summarize or interpret the file  \n- Respond with technical detail  \n- Suggest or imply follow-up steps or task progression  \n\n---\n\n## 🔹 INSTRUCTIONS\n\nYOU MUST:\n\n1. CONFIRM receipt of the document or file  \n2. RESPOND with a natural, lightly personable tone — calm, confident, and concise  \n3. NEVER analyze or comment on the file’s contents, even indirectly  \n4. NEVER describe what will be done with the file — your role ends at acknowledgment\n\n---\n\n## ✅ EXAMPLES\n\n🟢 GOOD:\n> “File received — all set on my end.”  \n> “Thanks, I’ve got the document. It’s been passed along.”  \n> “Appreciate the upload. That’s been taken care of.”  \n> “The file’s in. No action needed from you at the moment.”\n\n🔴 BAD:\n> “I’ll start reviewing this right away.” ❌  \n> “Here’s my breakdown of your document.” ❌  \n> “File analyzed. Results are as follows…” ❌\n\n---\n\n## FINAL NOTE\n\nYOU ARE HERE TO ACKNOWLEDGE — NOTHING MORE.  \nYOU DON’T ANALYZE, EXPLAIN, OR TAKE ACTION.  \nYOU OFFER A SIMPLE CONFIRMATION IN A VOICE THAT FEELS HUMAN, HELPFUL, AND EASY TO TRUST.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4620,
+        -140
+      ],
+      "id": "cd8efe6d-a2a6-4cc8-b6b9-5bab0fb03357",
+      "name": "Upload To File Input"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "16NQ2u3sLFXW4k80CBP3P0KaRPTRrPpT7",
+          "mode": "list",
+          "cachedResultName": "Images To Transcribe",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/16NQ2u3sLFXW4k80CBP3P0KaRPTRrPpT7"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3340,
+        -80
+      ],
+      "id": "d0ac711a-1aa3-4712-8028-0c15a434b61d",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wvxuUQumNlmQznnI",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2d6f7e8d-65be-48f5-90a0-83c86c1a8a6a",
+              "name": "files",
+              "value": "={{$node[\"Slack Trigger\"].json[\"files\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4140,
+        -140
+      ],
+      "id": "39dcda59-5191-437f-bc67-b6c13178b2c8",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Grab files from the previous node (\"Edit Fields1\")\nconst rawFiles = $json.files;\n\n// If it's a stringified JSON array (sometimes happens), parse it\nlet files;\nif (typeof rawFiles === 'string') {\n  try {\n    files = JSON.parse(rawFiles);\n  } catch (e) {\n    throw new Error(\"Failed to parse 'files' string as JSON.\");\n  }\n} else {\n  files = rawFiles;\n}\n\n// Check if we really have an array now\nif (!Array.isArray(files)) {\n  throw new Error(\"'files' is not an array.\");\n}\n\n// Split into one item per file\nreturn files.map(file => ({\n  json: file\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3960,
+        -140
+      ],
+      "id": "6c191336-025d-4622-ac72-ba4220928e5e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url_private_download }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "slackOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3780,
+        -140
+      ],
+      "id": "d5868635-20b9-4554-82fb-cefe26ac482d",
+      "name": "HTTP Request1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3560,
+        -140
+      ],
+      "id": "7eb9334b-4bfc-4369-9b1e-bdb75505397a",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -3160,
+        -80
+      ],
+      "id": "f65545f3-9f3c-46f9-84d7-45892ac81342",
+      "name": "Wait",
+      "webhookId": "a582997f-50d4-4f64-b621-2d9fdcd37aa5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const event = $json;\n\nconst isThread = !!event.thread_ts;\nconst session_id = isThread\n  ? `${event.user}:${event.thread_ts}`\n  : `${event.user}:top`;\n\nconst files = event.files || [];\n\nreturn [{\n  json: {\n    session_id,\n    user: event.user,\n    text: event.text || \"\",\n    ts: event.ts,\n    thread_ts: event.thread_ts || null,\n    is_thread: isThread,\n    files // <== array of files stays bundled\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6760,
+        -1880
+      ],
+      "id": "d6efb4f0-3cd1-42c5-8e69-8dcc18678f76",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "32c5f0ec-43b0-4165-816e-dd4e5c7fa682",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "2e1b6dce-0eb6-419a-a1d5-83b5ec000951",
+              "name": "user",
+              "value": "={{ $('Code2').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "94c37bf0-fef3-43c6-9dc7-640ea037c3f4",
+              "name": "ts",
+              "value": "={{ $('Code2').item.json.ts }}",
+              "type": "string"
+            },
+            {
+              "id": "b8b90c8c-a79f-4481-8efa-dfdb94fadff8",
+              "name": "thread_ts",
+              "value": "={{ $('Code2').item.json.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "0144689f-7197-4893-9095-9411b749050e",
+              "name": "session_id",
+              "value": "={{ $('Code2').item.json.session_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6520,
+        -1380
+      ],
+      "id": "c7b08dbe-f032-44f1-be14-2632a347d4b4",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "session_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -5560,
+        -1720
+      ],
+      "id": "90804a75-cadd-4cc4-98cd-d07e505b00a7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "23381507-3da6-461d-91db-2a42a31bfa84",
+              "leftValue": "={{ $('Code2').item.json.session_id }}",
+              "rightValue": "top",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -6400,
+        -1580
+      ],
+      "id": "1d720214-bfd8-4eb3-822f-862e2428de3f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -6160,
+        -1740
+      ],
+      "id": "f3b2ef5b-e7cc-4662-b456-0aaa819c3625",
+      "name": "Update Top Level Memory Session",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "limit": 20,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $('Code2').item.json.user }}:top"
+            }
+          ]
+        },
+        "combineConditions": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5980,
+        -1740
+      ],
+      "id": "3f765925-4b25-416a-924d-c8525e17d1d2",
+      "name": "Pull Top Level Memory Context",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "limit": 20,
+        "where": {
+          "values": [
+            {
+              "column": "session_id",
+              "value": "={{ $json.session_id }}"
+            }
+          ]
+        },
+        "combineConditions": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -5980,
+        -1560
+      ],
+      "id": "3c49fae6-511d-4635-8480-a7c8f7297e81",
+      "name": "Pull Thread Context",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccf4033b-82ed-425a-af19-cd700e215a60",
+              "name": "session_id",
+              "value": "={{ $('Text Classifier').item.json.user }}:{{$json.message.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7d173f2a-3170-411f-b6df-da811ad2c438",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "077a3c24-aa83-467c-827d-95fce00385b7",
+              "name": "user",
+              "value": "={{ $('Text Classifier').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "21654de7-5cb3-4771-819b-0d6883e6e34f",
+              "name": "previousConversationChain",
+              "value": "justChatting",
+              "type": "string"
+            },
+            {
+              "id": "1183c624-e834-423a-9c34-9ec4268a5cec",
+              "name": "timeAdded",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3940,
+        -2160
+      ],
+      "id": "b1f5c13f-9d3c-474d-9076-26cdeed4950b",
+      "name": "Update Postgres With New Message"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -6160,
+        -1560
+      ],
+      "id": "f15cd4d8-3223-4895-9430-412e433eb5e7",
+      "name": "Update Thread Memory Session",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"Rodger_Bot\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\",\n    \"respondingTo\": \"{{ $json.user }}\",\n    \"previousConversationChain\": \"{{ $json.previousConversationChain }}\",\n    \"timeAdded\": \"{{ $json.timeAdded }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3740,
+        -2160
+      ],
+      "id": "f82919d8-e30d-46df-872f-f5b89dfb9edd",
+      "name": "Update Thread Memory Session1",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const sessionId = items[0]?.json.session_id || null;\n\n// Step 1: Extract and sort messages by timeAdded\nconst sortedItems = [...items].sort((a, b) => {\n  const aTime = a.json.message?.data?.timeAdded ? new Date(a.json.message.data.timeAdded).getTime() : 0;\n  const bTime = b.json.message?.data?.timeAdded ? new Date(b.json.message.data.timeAdded).getTime() : 0;\n  return aTime - bTime;\n});\n\n// Step 2: Extract content and chain info\nconst formattedMessages = [];\nlet lastAddedAt = null;\nlet previousConversationChain = '';\n\nfor (let i = 0; i < sortedItems.length; i++) {\n  const item = sortedItems[i];\n  const content = item.json.message?.data?.content;\n  const timeAdded = item.json.message?.data?.timeAdded;\n  const chain = item.json.message?.data?.previousConversationChain;\n\n  if (content) {\n    formattedMessages.push(`--- Message ${i + 1} ---\\n${content}`);\n  }\n\n  // Track most recent timeAdded\n  if (timeAdded) {\n    const time = new Date(timeAdded).toISOString();\n    if (!lastAddedAt || new Date(time) > new Date(lastAddedAt)) {\n      lastAddedAt = time;\n    }\n  }\n\n  // Track most recent non-null previousConversationChain\n  if (chain && chain !== 'null') {\n    previousConversationChain = chain;\n  }\n}\n\nconst combined = formattedMessages.join('\\n\\n');\n\n// Final output\nreturn [\n  {\n    json: {\n      session_id: sessionId,\n      message: {\n        data: {\n          content: combined,\n          previousConversationChain: previousConversationChain || combined,  // fallback if empty\n          lastAddedAt: lastAddedAt || new Date().toISOString() // fallback to now if missing\n        }\n      }\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5760,
+        -1560
+      ],
+      "id": "466a5088-5b5b-40d6-a615-5cfa310a0823",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const sessionId = items[0]?.json.session_id || null;\n\n// Step 1: Extract and sort messages by timeAdded\nconst sortedItems = [...items].sort((a, b) => {\n  const aTime = a.json.message?.data?.timeAdded ? new Date(a.json.message.data.timeAdded).getTime() : 0;\n  const bTime = b.json.message?.data?.timeAdded ? new Date(b.json.message.data.timeAdded).getTime() : 0;\n  return aTime - bTime;\n});\n\n// Step 2: Extract content and chain info\nconst formattedMessages = [];\nlet lastAddedAt = null;\nlet previousConversationChain = '';\n\nfor (let i = 0; i < sortedItems.length; i++) {\n  const item = sortedItems[i];\n  const content = item.json.message?.data?.content;\n  const timeAdded = item.json.message?.data?.timeAdded;\n  const chain = item.json.message?.data?.previousConversationChain;\n\n  if (content) {\n    formattedMessages.push(`--- Message ${i + 1} ---\\n${content}`);\n  }\n\n  // Track most recent timeAdded\n  if (timeAdded) {\n    const time = new Date(timeAdded).toISOString();\n    if (!lastAddedAt || new Date(time) > new Date(lastAddedAt)) {\n      lastAddedAt = time;\n    }\n  }\n\n  // Track most recent non-null previousConversationChain\n  if (chain && chain !== 'null') {\n    previousConversationChain = chain;\n  }\n}\n\nconst combined = formattedMessages.join('\\n\\n');\n\n// Final output\nreturn [\n  {\n    json: {\n      session_id: sessionId,\n      message: {\n        data: {\n          content: combined,\n          previousConversationChain: previousConversationChain || combined,  // fallback if empty\n          lastAddedAt: lastAddedAt || new Date().toISOString() // fallback to now if missing\n        }\n      }\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5760,
+        -1740
+      ],
+      "id": "dd13286e-cd03-422f-b4f5-257ade6010ec",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccf4033b-82ed-425a-af19-cd700e215a60",
+              "name": "session_id",
+              "value": "={{ $('Text Classifier').item.json.user }}:{{$json.message.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7d173f2a-3170-411f-b6df-da811ad2c438",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "077a3c24-aa83-467c-827d-95fce00385b7",
+              "name": "user",
+              "value": "={{ $('Text Classifier').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "5b3bcc3a-6e73-416e-a980-ef56992ae868",
+              "name": "previousConversationChain",
+              "value": "scheduler",
+              "type": "string"
+            },
+            {
+              "id": "d2e87ed0-16b7-4b32-9e4b-0a50d01522ee",
+              "name": "timeAdded",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3180,
+        -2580
+      ],
+      "id": "e3bd1d4f-ffbb-482b-aa44-b0b9887b98da",
+      "name": "Update Postgres With New Message1"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"Rodger_Bot\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\",\n    \"respondingTo\": \"{{ $json.user }}\",\n    \"previousConversationChain\": \"{{ $json.previousConversationChain }}\",\n    \"timeAdded\": \"{{ $json.timeAdded }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2980,
+        -2580
+      ],
+      "id": "53b13bb4-1e2c-46b0-bac6-d9c378585017",
+      "name": "Update Thread Memory Session2",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccf4033b-82ed-425a-af19-cd700e215a60",
+              "name": "session_id",
+              "value": "={{ $('Text Classifier').item.json.user }}:{{$json.message.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7d173f2a-3170-411f-b6df-da811ad2c438",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "077a3c24-aa83-467c-827d-95fce00385b7",
+              "name": "user",
+              "value": "={{ $('Text Classifier').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "1c843f3e-3da7-410b-a28e-77ccceb481cd",
+              "name": "previousConversationChain",
+              "value": "research",
+              "type": "string"
+            },
+            {
+              "id": "8d278f3d-bb01-4d3f-904c-a3c64304686c",
+              "name": "timeAdded",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3600,
+        -1840
+      ],
+      "id": "9e1e1bb3-9075-4786-98c7-88b852efd084",
+      "name": "Update Postgres With New Message2"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"Rodger_Bot\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\",\n    \"respondingTo\": \"{{ $json.user }}\",\n    \"previousConversationChain\": \"{{ $json.previousConversationChain }}\",\n    \"timeAdded\": \"{{ $json.timeAdded }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3400,
+        -1840
+      ],
+      "id": "d0aaad35-8668-46ce-958d-f66c32b73a75",
+      "name": "Update Thread Memory Session3",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Update Postgres With New Message').item.json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $('Text Classifier').item.json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3540,
+        -2160
+      ],
+      "id": "f4ad325e-cc2d-4a5c-bd3e-e7e49f5aa1e3",
+      "name": "Update Thread Memory Session4",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Update Postgres With New Message1').item.json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $('Text Classifier').item.json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2780,
+        -2580
+      ],
+      "id": "5518f694-da7d-4b59-a24d-ce65b1dd25ec",
+      "name": "Update Thread Memory Session5",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Update Postgres With New Message2').item.json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $('Text Classifier').item.json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3200,
+        -1840
+      ],
+      "id": "a697bd71-1d94-4b6a-8889-0153576f4a01",
+      "name": "Update Thread Memory Session6",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccf4033b-82ed-425a-af19-cd700e215a60",
+              "name": "session_id",
+              "value": "={{ $('Text Classifier').item.json.user }}:{{$json.message.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7d173f2a-3170-411f-b6df-da811ad2c438",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "077a3c24-aa83-467c-827d-95fce00385b7",
+              "name": "user",
+              "value": "={{ $('Text Classifier').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "abbe9752-a039-4efd-85ed-4ed93130ada1",
+              "name": "previousConversationChain",
+              "value": "fallback",
+              "type": "string"
+            },
+            {
+              "id": "f3642db7-32e2-43db-9e09-a15bc4fcc46f",
+              "name": "timeAdded",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4080,
+        -500
+      ],
+      "id": "270aa382-d46b-4191-9555-d202d1b48f91",
+      "name": "Update Postgres With New Message3"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"Rodger_Bot\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\",\n    \"respondingTo\": \"{{ $json.user }}\",\n    \"previousConversationChain\": \"{{ $json.previousConversationChain }}\",\n    \"timeAdded\": \"{{ $json.timeAdded }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3880,
+        -500
+      ],
+      "id": "294beb73-1a76-4e6a-a3e8-ebd273819505",
+      "name": "Update Thread Memory Session7",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Update Postgres With New Message3').item.json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $('Text Classifier').item.json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -3680,
+        -500
+      ],
+      "id": "e83349b3-0ee0-4378-9a4a-273f626a2e76",
+      "name": "Update Thread Memory Session8",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**User's Current Input:** {{ $json.text }}\n\n**previousConversationChain:** {{ $json.message.data.previousConversationChain }}\n\n**Last Rodger Message In Chain Sent:** {{ $json.message.data.lastAddedAt }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Scheduler",
+              "description": "=\nTrigger Conditions:\n\n1. Message contains clear scheduling language such as:\n   - “schedule that”\n   - “book time to...”\n   - “let’s set up time...”\n   - “can we make time for...”\n   - “add time to talk about...”\n   - “let’s calendar it”\n   - “block off time for...”\n\n2. Message contains the explicit word **“thusly”**, OR refers to a task as being **“thusly’d”**\n\n3. Message is a confirmation, follow-up, or clarification that references a recent **scheduling action**  \n   - Example: “yes, do that” or “sounds good” within ~30 minutes of a scheduling proposal\n\n4. The `previousConversationChain` is **“scheduler”** or **“thusly”**, and the current message:\n   - Builds on that chain (e.g., adds context, confirms details)\n   - Adds constraints (“make it Thursday” or “let’s do an hour instead”)\n\n---\n\nPurpose:\nRoute all messages with **scheduling intent**, **scheduling language**, or **continuation of a scheduling context** — including standard phrasing or special keywords like **“thusly.”**\n\n---\n\nExamples That Should Route to “Scheduler”:\n\n✅ “Let’s book time to dig into that.”  \n✅ “Can we block off some time tomorrow?”  \n✅ “Make that a thusly.”  \n✅ “Yes, do that.” (following a “book this” or “thusly” message)  \n✅ “We’ll need to calendar that.”  \n✅ “That should be thusly’d.”  \n✅ “Let’s schedule the follow-up for next week.”  \n✅ “Sounds good, 45 minutes?” (previousConversationChain = scheduler)  \n✅ “Cool — let’s do Thursday at 2.”  "
+            },
+            {
+              "category": "Just Chatting",
+              "description": "=### Just Chatting\n\n**Trigger Conditions (ALL must be true):**\n\n- The message is **conversational in tone** — curious, reflective, casual, exploratory, or humorous  \n- The message does **not explicitly or implicitly instruct the assistant to perform a task**, make a note, conduct research, or schedule anything  \n- The message is **non-directive** and does **not include imperative verbs** (e.g., “note,” “send,” “schedule,” “remind,” “log”)  \n- It does **not invoke operational categories** (e.g. “email this,” “set up time,” “add it to notes”)  \n- The `previousConversationChain` is `justChatting` **or** the message is clearly in a **non-task-shifting tone**  \n- The purpose is **dialogue and engagement**, not execution  \n\n---\n\n**What Just Chatting *IS***  \nThis category captures **freeform, non-actionable conversation** — including:\n- Speculative questions (\"I wonder if...\")  \n- Thought experiments or what-ifs  \n- Light workplace banter  \n- Open-ended ideas or musings  \n- Casual business talk that’s **not directing a system function**\n\n---\n\n**Representative Examples:**\n\n- “That cracked me up.”  \n- “You ever think about making the logo smaller?”  \n- “What would Bradford think of that?”  \n- “That was a cool trick you did earlier.”  \n- “Do you know the average salary for a PM?” ← ✅ (IF not framed as a search request)  \n- “Wonder what would happen if we removed all meetings.”  \n- “I’m just thinking out loud here…”  \n- “You ever notice how no one reads onboarding docs?”  \n- “I feel like this week evaporated.”  \n\n---\n\n**Route ELSEWHERE if:**\n\n- The message contains **task verbs** (“schedule,” “note,” “send,” “remind,” “check”)  \n- The user requests the system to **remember, save, or find** something  \n- The question clearly calls for **factual lookup** (“What’s the GDP of Sweden?”)  \n- The user refers to **notes, calendars, email threads**, or specific assistant behaviors  \n\n---\n\n**Edge Case Handling:**\n\n| Example | Route |\n|--------|-------|\n| “Can you remind me later?” | ❌ Not chatting → `Scheduler` or `Notes`  \n| “Can you note that?” | ❌ Task → `Notes`  \n| “What was the brain score again?” | ❌ Data query → `Brain`  \n| “Is it weird I don’t like retros?” | ✅ Chatting  \n| “I wonder how other teams handle this...” | ✅ Chatting  \n| “Let’s ping them next week.” | ❌ Task → `Emails` or `Scheduler`  \n| “Could you save that for later?” | ❌ Task → `Notes`  \n| “Do you know the average salary for a PM?” | ✅ IF speculative/conversational❌ IF phrased as “Can you look up...” → `SearchAgent`\n\n---"
+            },
+            {
+              "category": "Search Agent",
+              "description": "=Trigger Conditions:\n\nUser asks the agent to look something up, gather information, or conduct research\n\nMessage is a clarification or continuation of a previous research task\n\nUser expresses curiosity or learning intent that would require external information\n\npreviousConversationChain is searchAgent and current message builds on the topic or answers follow-up\n\nMessage does not contain the word “thusly”\n\nPurpose: Route to research or fact-finding logic when a user is trying to learn, explore, or retrieve information.\n\nExamples:\n\n“Find the average temperatures in March for that region.”\n\n“What’s the calorie count of that recipe?”\n\n“Tell me more about that person.”\n\n“Keep going on the search you started earlier.”"
+            },
+            {
+              "category": "Emails",
+              "description": "=Trigger Conditions:\n\n1. Message contains explicit email-related **verbs or phrases**, such as:\n   - “email that to…”\n   - “send them an email”\n   - “can you draft an email…”\n   - “shoot an email over”\n   - “fire off a note”\n   - “type up an email”\n   - “can you send this?”\n   - “write up a quick note”\n\n2. Message references email-specific **nouns** or **objects**, including:\n   - “inbox” / “Gmail”\n   - “label that email”\n   - “check my email for...”\n   - “look in my inbox”\n   - “find that email”\n   - “tag it as important”\n   - “thread” / “conversation thread”\n   - “reply” / “forward” / “resend”\n\n3. Message implies an email-based follow-up or continuation of communication:\n   - “follow up with them”\n   - “ping them about this”\n   - “send a reminder about...”\n   - “respond to that thread”\n   - “nudge them”\n   - “can you email a summary?”\n\n4. The `previousConversationChain` is **“email”**, and the current message:\n   - Adds, revises, or confirms an email action (e.g., \"Actually, make it more formal\", or \"Add the attachment\")\n   - Mentions someone or something previously referenced in an email context (“just say what we discussed”)\n\n---\n\nPurpose:  \nRoute all messages with **intent to send, draft, retrieve, label, or reference email communication**. This includes any phrasing that suggests interacting with an inbox, composing/replying/forwarding emails, or performing actions related to specific messages or threads.\n\n---\n\nExamples That Should Route to “Email”:\n\n✅ “Can you email that to her?”  \n✅ “Draft something for the client about this.”  \n✅ “Let’s ping them about the delay.”  \n✅ “Shoot over a quick note.”  \n✅ “Check my inbox for the one from Dan.”  \n✅ “Label that email as urgent.”  \n✅ “Respond to the thread from last week.”  \n✅ “Type something up — polite but firm.”  \n✅ “Forward that along to Sarah and tag it FYI.”  \n✅ “Actually, make the tone more casual.” (previousConversationChain = email)  \n✅ “Remind them we need a response.”  \n✅ “Can you resend that?”  \n✅ “Find the email about pricing.”  \n✅ “Just write: thanks, we’ll follow up soon.”  \n✅ “Send it with the PDF this time.”"
+            },
+            {
+              "category": "Notes",
+              "description": "=Trigger Conditions:\n\nThe message explicitly states the user is taking a note, saving a note, or writing something down\n\nMessage contains keywords like:\n\n“note,” “notes,” “make a note,” “jot this down,” “remember this,” “save this”\n\nMessage is clearly not a directive for action or research but instead meant for record-keeping\n\npreviousConversationChain is notes and current message is continuing in that context\n\nPurpose:\nRoute messages that the user intends to store for reference, log as personal notes, or document thoughts without requesting further action.\n\nExamples:\n\n“Note: This might be a good approach for next time.”\n\n“Make a note that I liked version 2 better.”\n\n“Just jotting this down: remind me to review the outline later.”\n\n“These are just my notes from the meeting — nothing to act on.”"
+            }
+          ]
+        },
+        "options": {
+          "multiClass": false,
+          "fallback": "other",
+          "systemPromptTemplate": "=<system message>\nYou are a message classification system responsible for routing Slack messages to the correct assistant workflow. The user's message may be standalone or part of a threaded conversation.\n\nUse all available information to determine the intent, including:\n\n- The current user message  \n- The previous conversation thread content  \n- The last known assistant routing (`previousConversationChain`)  \n- The timestamp of the last Rodger_Bot interaction\n\n---\n\n## 🔹 INPUTS\n\n**Previous Conversations**\n\n**User's Current Input**\n\n---\n\n## 🔹 CLASSIFICATION CATEGORIES\n\nClassify the message into one of the following categories. Use both message content and historical context, including recency, to decide.\n\n---\n\n### 1. **Scheduler**\n\nRoute here if:\n- The message contains **scheduling language** such as:\n  - “schedule that”\n  - “let’s book time...”\n  - “can we calendar this?”\n  - “block off time...”\n  - “set up a follow-up”\n- The message includes or references the word **“thusly”**, including phrases like:\n  - “Make that a thusly.”\n  - “Schedule it, thusly.”\n  - “That should be thusly’d.”\n- The **previousConversationChain** was “scheduler” or “thusly”, and the current message:\n  - Appears to confirm, continue, or add constraints (e.g. \"Thursday at 2pm\")\n  - Is a follow-up like “Yes, that works” or “Sounds good” within ~30 minutes of the last assistant message\n\n**Examples:**\n- “Make that a thusly.”\n- “Let’s book time to go over this.”\n- “Yes, do that.” (if it follows a recent scheduler/“thusly” directive)\n- “Schedule that for Thursday at 10.”\n- “Can we block off time for the second part?”\n- “Let’s calendar this before the end of the week.”\n\n---\n\n### 2. **Just Chatting**\n\nRoute here if:\n- The user is simply conversing or making a casual observation\n- The message is inquisitive, reflective, humorous, or non-directive\n- It does **not** include scheduling, tasking, or decision language\n- The **previousConversationChain** was “justChatting” and this appears to continue that tone\n\n**Examples:**\n- “What do you think of that plan?”\n- “You ever think about logos this way?”\n- “That’s kind of funny.”\n\n---\n\n### 3. **Search Agent**\n\nRoute here if:\n- The user asks for facts, definitions, or any kind of information lookup\n- They are responding to a request for clarification or continuation of a prior research task\n- The message clearly has **research intent**\n- The **previousConversationChain** was “searchAgent” and the user is continuing or replying to it\n- The message does **not include “thusly”**\n\n**Examples:**\n- “Can you look up average rent in Dallas?”\n- “What are some design trends for 2025?”\n- “Yes, please continue the search on bird-safe glass.”\n\n---\n\n### 4. **Emails**\n\nRoute here if:\n- The user references composing, sending, forwarding, or retrieving email\n- Mentions inboxes, threads, replies, labels, or Gmail\n- Suggests a follow-up, reminder, or outreach message via email\n- `previousConversationChain` was “email” and the message modifies or continues an email-related action\n\n**Trigger Conditions:**\n\n1. Message contains explicit email-related **verbs or phrases**, such as:\n   - “email that to…”\n   - “send them an email”\n   - “can you draft an email…”\n   - “shoot an email over”\n   - “fire off a note”\n   - “type up an email”\n   - “can you send this?”\n   - “write up a quick note”\n\n2. Message references email-specific **nouns** or **objects**, including:\n   - “inbox” / “Gmail”\n   - “label that email”\n   - “check my email for...”\n   - “look in my inbox”\n   - “find that email”\n   - “tag it as important”\n   - “thread” / “conversation thread”\n   - “reply” / “forward” / “resend”\n\n3. Message implies an email-based follow-up or continuation of communication:\n   - “follow up with them”\n   - “ping them about this”\n   - “send a reminder about...”\n   - “respond to that thread”\n   - “nudge them”\n   - “can you email a summary?”\n\n4. The `previousConversationChain` is **“email”**, and the current message:\n   - Adds, revises, or confirms an email action (e.g., \"Actually, make it more formal\", or \"Add the attachment\")\n   - Mentions someone or something previously referenced in an email context (“just say what we discussed”)\n\n**Examples:**\n- “Can you email that to her?”\n- “Draft something for the client about this.”\n- “Let’s ping them about the delay.”\n- “Shoot over a quick note.”\n- “Check my inbox for the one from Dan.”\n- “Label that email as urgent.”\n- “Respond to the thread from last week.”\n- “Type something up — polite but firm.”\n- “Forward that along to Sarah and tag it FYI.”\n- “Actually, make the tone more casual.” (previousConversationChain = email)\n- “Remind them we need a response.”\n- “Can you resend that?”\n- “Find the email about pricing.”\n- “Just write: thanks, we’ll follow up soon.”\n- “Send it with the PDF this time.”\n\n---\n\n### 5. **Notes**\n\nRoute here if:\n- The user explicitly says they are **taking a note**, **making a note**, or saving something to remember\n- Message includes phrases like:\n  - “note,” “notes,” “jot this down,” “remember this,” “logging this,” “save this for later”\n- The message is **not a directive**, task, or request — but intended for **personal documentation**\n- The **previousConversationChain** was “notes” and the message appears to continue that mode\n\n**Examples:**\n- “Note: I liked the second version better.”\n- “Just jotting this down so I don’t forget.”\n- “Here are some notes from my call earlier.”\n- “I want to save this for next week.”\n\n---\n\n### 6. **Other**\n\nRoute here if:\n- None of the above categories apply\n- The intent is unclear or the message is vague **without helpful previousConversationChain**\n- This is a default fallback\n\n**Examples:**\n- “OK”\n- “Sure”\n- “I don’t know”\n\n---\n\n## 🔹 TIMESTAMP + CONTEXT WEIGHTING\n\n- If the last assistant interaction was **over 1 hour ago**, rely primarily on the **current message** content.\n- If the last message was **within 30 minutes**, and the user says something vague like “yes, go ahead” — assume it **continues the same path** as the previousConversationChain.\n- For timestamps between 30–60 minutes, evaluate based on tone, clarity, and closeness to task completion.\n\n---\n\n📦 OUTPUT FORMAT  \nYou must respond with a single JSON object in the following format — with no extra text or explanation\n</system message>\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -5340,
+        -1720
+      ],
+      "id": "2b1d8670-08b0-451c-99ef-ce282e769e1a",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $('Text Classifier').item.json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE RODGER — THE USER’S PERSONAL RESEARCH LIAISON: CLEAR, FOCUSED, AND HIGHLY EFFECTIVE.\n\nYOUR ROLE IS TO PERFORM REAL-TIME, CONTEXTUAL RESEARCH ON BEHALF OF THE USER.  \nYOU DO NOT GUESS — YOU SEARCH AND PROVIDE FACTS.\n\n---\n\n## 🎯 RESEARCH FLOW\n\n1. ✅ **UNDERSTAND THE REQUEST**\n   - IDENTIFY the user's topic, intent, and information goal\n   - DETERMINE THE USER’S RESEARCH TYPE:\n     - FACTUAL (What is, When does, How many…)  \n     - DEFINITIONAL (Define, Meaning of…)  \n     - TEMPORAL (Upcoming, Current, Next, As of today…)  \n     - COMPARATIVE (X vs Y, Which is better…)  \n     - HOW-TO / EXPLANATORY (How to, Steps for…)  \n     - STRATEGIC / DECISIONAL (Should I, Risks of…)  \n     - EVALUATIVE (Best, Most popular, Ranked…)\n\n   - USE THIS to inform your question and search  \n   - IF THE REQUEST IS UNCLEAR:  \n     - ASK THE USER for clarification in a polite, concise tone  \n     - Example: “Could you clarify what exactly you’re hoping to find?”\n\n2. ✅ **FORMULATE A WELL-STRUCTURED QUESTION**\n   - THINK LIKE A SMART PERSON TYPING A FULL QUESTION INTO GOOGLE  \n   - AVOID keyword clumps — USE clear, complete, long-tail phrasing  \n   - INCLUDE:\n     - Relevant keywords from the user's phrasing  \n     - Time references (e.g., “March 2025”, “as of today”)  \n     - Clarifying context for ambiguous subjects  \n\n   - ✅ EXAMPLES OF STRONG QUESTIONS:\n     - “What is the ceremonial belt sumo wrestlers wear for official photos?”\n     - “What do yokozuna wear during public sumo ceremonies?”\n     - “When and where is the next official sumo tournament in Japan in March 2025?”\n\n   - ❌ AVOID:\n     - Keyword mashups like “sumo belt photo name”\n     - Bare nouns or vague terms\n     - Social media terms like “Reddit”, “Instagram” unless explicitly needed\n\n3. ✅ **TEMPORAL AWARENESS**\n   - TODAY’S DATE IS: {{ $today }}\n   - For future-looking queries:\n     - FILTER outdated or past content  \n     - PRIORITIZE terms like “upcoming”, “next”, or future time windows  \n   - For current status queries:\n     - USE terms like “as of {{ $today }}”, “current version”, “latest update”\n\n4. ✅ **EXECUTE THE SEARCH**\n   - IMMEDIATELY CALL THE `googleSearch()` TOOL WITH YOUR QUESTION  \n   - DO NOT OUTPUT OR DISPLAY THE QUESTION — YOU MUST USE THE TOOL  \n   - THIS IS YOUR CORE FUNCTION\n\n---\n\n## 🔍 ANALYZE THE RESULTS\n\n- READ the top relevant sources  \n- EXTRACT:\n  - Key definitions  \n  - Dates, figures, comparisons  \n  - Ordered steps or summary facts  \n- CITE at least one source or link where helpful  \n- FILTER OUT low-quality or off-topic content\n\n---\n\n## ✅ DELIVER THE ANSWER\n\n- RESPOND AS RODGER — CLEAR, CONCISE, AND KNOWLEDGEABLE  \n- INCLUDE:\n  - A direct, useful answer  \n  - (Optional) 1–2 links to authoritative sources  \n  - (Optional) a line of reflection or context — keep it professional and helpful\n\n---\n\n## 🔁 EXAMPLES OF EFFECTIVE OUTPUT\n\n✅ GOOD:\n> “The ceremonial rope worn by top-ranked sumo wrestlers is called a *tsuna*. It is reserved for yokozuna and used during formal rituals and photo sessions. [Japan Sumo Association](https://example.com)”\n\n> “The next official sumo tournament in Japan is scheduled for March 9–23, 2025, in Osaka. It’s part of the Grand Tournament circuit. [Source](https://example.com)”\n\n---\n\n## ❌ WHAT NOT TO DO\n\nDO NOT:\n- ❌ GUESS — YOU MUST CALL `googleSearch()` FOR ALL FACTUAL OR TIMELY QUERIES  \n- ❌ OUTPUT THE QUERY INSTEAD OF CALLING THE TOOL — TOOL EXECUTION IS MANDATORY  \n- ❌ BUILD QUERIES USING SHORT, BROAD, OR VAGUE PHRASES  \n- ❌ RESPOND WITHOUT READING OR ANALYZING RESULTS  \n- ❌ OMIT SOURCE LINKS IF THE CLAIM NEEDS CREDIBILITY  \n- ❌ DELIVER CASUAL, STYLISTIC, OR THEATRICAL REPLIES — KEEP IT STRAIGHTFORWARD  \n- ❌ ACCEPT VAGUE PROMPTS — ASK FOR CLARIFICATION FIRST\n\n---\n\n## ✅ FINAL NOTE\n\nYOU ARE A HIGH-ACCURACY RESEARCH ASSISTANT.  \nEVERY QUESTION YOU FORMULATE IS WELL-STRUCTURED.  \nEVERY SEARCH YOU EXECUTE IS NECESSARY.  \nEVERY RESPONSE YOU DELIVER IS FACTUAL, CLEAN, AND TO THE POINT.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4160,
+        -1840
+      ],
+      "id": "0c0acfb7-d488-42cf-93ff-69fbdccc74a9",
+      "name": "Research Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $json.output;\n\n// ✅ Parse flexible duration formats like \"3 hours\", \"1 hour 30 minutes\", or \"45 minutes\"\nfunction parseDuration(durationStr) {\n  const hoursMatch = durationStr.match(/(\\d+)\\s*hour/);\n  const minutesMatch = durationStr.match(/(\\d+)\\s*minute/);\n\n  const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;\n  const minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;\n  const total = hours * 60 + minutes;\n\n  if (total === 0 || isNaN(total)) {\n    throw new Error(`Invalid or missing duration format: \"${durationStr}\"`);\n  }\n\n  return total;\n}\n\nconst durationMinutes = parseDuration(input.duration);\nconst windowStart = input.windowStart;\nconst windowEnd = input.windowEnd;\nconst preferredDate = input.preferredDate;\nconst events = input.events || [];\nconst numDaysToScan = 5;\n\n// ✅ Convert \"10:00 AM\" into a Date for a given YYYY-MM-DD string\nfunction getTime(dateStr, timeStr) {\n  const [time, modifier] = timeStr.trim().split(\" \");\n  let [hours, minutes] = time.split(\":\").map(Number);\n  if (modifier === \"PM\" && hours < 12) hours += 12;\n  if (modifier === \"AM\" && hours === 12) hours = 0;\n\n  const date = new Date(`${dateStr}T00:00:00`);\n  date.setHours(hours, minutes, 0, 0);\n  return date;\n}\n\n// ✅ Group \"Mandatory\" events by day\nconst busyByDay = {};\nfor (const ev of events) {\n  const start = new Date(ev.start.dateTime);\n  const end = new Date(ev.end.dateTime);\n  const summary = ev.summary || ev.title || \"\";\n  const isMandatory = summary.toLowerCase().includes(\"mandatory\");\n\n  if (!isMandatory) continue; // ✅ Ignore non-mandatory events\n\n  const day = start.toISOString().split(\"T\")[0];\n  if (!busyByDay[day]) busyByDay[day] = [];\n  busyByDay[day].push({ start, end });\n}\n\nconst startScanDate = new Date(preferredDate);\n\n// ✅ Scan for available time slots\nfor (let i = 0; i < numDaysToScan; i++) {\n  const currentDate = new Date(startScanDate);\n  currentDate.setDate(currentDate.getDate() + i);\n  const dayKey = currentDate.toISOString().split(\"T\")[0];\n  const dayStart = getTime(dayKey, windowStart);\n  const dayEnd = getTime(dayKey, windowEnd);\n\n  const busy = (busyByDay[dayKey] || [])\n    .filter(ev => ev.end > dayStart && ev.start < dayEnd)\n    .sort((a, b) => a.start - b.start);\n\n  // ✅ Merge overlapping blocks\n  const merged = [];\n  for (const block of busy) {\n    if (!merged.length || block.start > merged[merged.length - 1].end) {\n      merged.push({ ...block });\n    } else {\n      merged[merged.length - 1].end = new Date(Math.max(merged[merged.length - 1].end, block.end));\n    }\n  }\n\n  // ✅ Look for available gaps\n  let cursor = new Date(dayStart);\n  for (const block of merged) {\n    const gap = (block.start - cursor) / 60000;\n    if (gap >= durationMinutes) {\n      const end = new Date(cursor.getTime() + durationMinutes * 60000);\n      return [\n        {\n          json: {\n            preferredDate: dayKey,\n            startTime: cursor.toLocaleTimeString(\"en-US\", { hour: \"numeric\", minute: \"2-digit\" }),\n            endTime: end.toLocaleTimeString(\"en-US\", { hour: \"numeric\", minute: \"2-digit\" }),\n            duration: `${durationMinutes} minutes`\n          }\n        }\n      ];\n    }\n    cursor = new Date(Math.max(cursor, block.end));\n  }\n\n  // ✅ Check after last block\n  const remaining = (dayEnd - cursor) / 60000;\n  if (remaining >= durationMinutes) {\n    const end = new Date(cursor.getTime() + durationMinutes * 60000);\n    return [\n      {\n        json: {\n          preferredDate: dayKey,\n          startTime: cursor.toLocaleTimeString(\"en-US\", { hour: \"numeric\", minute: \"2-digit\" }),\n          endTime: end.toLocaleTimeString(\"en-US\", { hour: \"numeric\", minute: \"2-digit\" }),\n          duration: `${durationMinutes} minutes`\n        }\n      }\n    ];\n  }\n}\n\n// ❌ No time block found\nthrow new Error(\"No available time block found within the scanned range.\");\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3920,
+        -2580
+      ],
+      "id": "2dcdfda7-3d0c-415f-bb5d-1295b101029b",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"preferredDate\": \"string\",\n  \"windowStart\": \"string\",\n  \"windowEnd\": \"string\",\n  \"duration\": \"string\",\n  \"title\": \"string\",\n  \"originalText\": \"string\",\n  \"description\": \"string\",\n  \"additionalNotes\": \"string\",\n  \"userId\": \"string\",\n  \"events\": [\n    {\n      \"start\": {\n        \"dateTime\": \"string\"\n      },\n      \"end\": {\n        \"dateTime\": \"string\"\n      }\n    }\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -3980,
+        -2300
+      ],
+      "id": "ce1b9472-f278-42bb-815c-cc6a5d762c1d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4360,
+        -980
+      ],
+      "id": "f8bf3e38-05ee-4a33-8bfa-b100941c238d",
+      "name": "Message: User 8",
+      "webhookId": "e9dd22b4-278b-4e7d-8e1a-11de36536cfb",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccf4033b-82ed-425a-af19-cd700e215a60",
+              "name": "session_id",
+              "value": "={{ $('Text Classifier').item.json.user }}:{{$json.message.thread_ts }}",
+              "type": "string"
+            },
+            {
+              "id": "7d173f2a-3170-411f-b6df-da811ad2c438",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "077a3c24-aa83-467c-827d-95fce00385b7",
+              "name": "user",
+              "value": "={{ $('Text Classifier').item.json.user }}",
+              "type": "string"
+            },
+            {
+              "id": "e74a0898-cff1-461c-a35e-8276987c5205",
+              "name": "previousConversationChain",
+              "value": "notes",
+              "type": "string"
+            },
+            {
+              "id": "0943a235-53fb-4e3b-ba11-2c3ff8e41799",
+              "name": "timeAdded",
+              "value": "={{ $now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2660,
+        -980
+      ],
+      "id": "d65037a2-a62e-429a-bfdf-0a6e554477da",
+      "name": "Update Postgres With New Message5"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $json.session_id }}",
+            "message": "={\n  \"type\": \"Rodger_Bot\",\n  \"data\": {\n    \"content\": \"{{ $json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\",\n    \"respondingTo\": \"{{ $json.user }}\",\n    \"previousConversationChain\": \"{{ $json.previousConversationChain }}\",\n    \"timeAdded\": \"{{ $json.timeAdded }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2460,
+        -980
+      ],
+      "id": "0b06911b-bf70-4311-a5ee-b0a81b32abd6",
+      "name": "Update Thread Memory Session11",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_rodger_chat",
+          "mode": "list",
+          "cachedResultName": "n8n_rodger_chat"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "session_id": "={{ $('Update Postgres With New Message5').item.json.session_id }}",
+            "message": "={\n  \"type\": \"human\",\n  \"data\": {\n    \"content\": \"{{ $('Text Classifier').item.json.text.replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\\\"').replace(/{/g, '\\\\{').replace(/}/g, '\\\\}').replace(/\\n/g, '\\\\n').replace(/\\r/g, '') }}\"\n  }\n}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2260,
+        -980
+      ],
+      "id": "f8dc2466-8299-4794-9d86-a49cb334dd31",
+      "name": "Update Thread Memory Session12",
+      "credentials": {
+        "postgres": {
+          "id": "kak8MG9EY8DYIMbt",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1tnFbWeL0qSrsspzpUjtz0W51RmYi-GQD",
+        "title": "={{ $today.format('yyyy-MM-dd') }} Notes"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -3620,
+        -1100
+      ],
+      "id": "ce8dd07d-7685-40fa-8e8e-2de9775af119",
+      "name": "Create Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "KZ01AzfE52ZVIt7V",
+          "name": "Google Docs account11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "937565e8-3b8a-4686-ba42-dd976fdca488",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3780,
+        -980
+      ],
+      "id": "6a09dc00-d91f-45cf-80db-191d6a224626",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1GvhyIieq1BynRdLxGS1_E3IrOiyfVlZx",
+          "mode": "list",
+          "cachedResultName": "Rodger Notes Folder",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1GvhyIieq1BynRdLxGS1_E3IrOiyfVlZx"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3440,
+        -1100
+      ],
+      "id": "bf0c5c27-c047-466f-8ace-b30a88d68454",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wvxuUQumNlmQznnI",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=Time: {{ $('Notes Agent - Prepare').item.json.output.timestamp }}\n\nDocument Type: Notes From Rodger\n\nSession_ID: {{ $('Text Classifier').item.json.session_id }}\n\nUser: {{ $('Notes Agent - Prepare').item.json.output.user }}\n\nSummary: {{ $('Notes Agent - Prepare').item.json.output.summary }}\n\nContent: {{ $('Notes Agent - Prepare').item.json.output.content }}\n\nAction Items:\n{{ $('Notes Agent - Prepare').item.json.output.action_items }}\n\nOriginal Message To Rodger: {{ $('Notes Agent - Prepare').item.json.output.original_message }}\n\n********************\n\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -3280,
+        -1100
+      ],
+      "id": "a84f2962-7cb5-4ea7-9836-289d3e512a97",
+      "name": "Add Notes1",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "KZ01AzfE52ZVIt7V",
+          "name": "Google Docs account11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=Time: {{ $('Notes Agent - Prepare').item.json.output.timestamp }}  \n\nDocument Type: Notes From Rodger\n\nSession_ID: {{ $('Text Classifier').item.json.session_id }}\n\nUser: {{ $('Notes Agent - Prepare').item.json.output.user }}  \n\nSummary: {{ $('Notes Agent - Prepare').item.json.output.summary }}  \n\nContent: {{ $('Notes Agent - Prepare').item.json.output.content }}\n\nAction Items: \n{{ $('Notes Agent - Prepare').item.json.output.action_items }}  \n\nOriginal Message To Rodger: {{ $('Notes Agent - Prepare').item.json.output.original_message }}  \n\n********************\n\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -3620,
+        -880
+      ],
+      "id": "b5ef266e-016c-436b-97ae-15092a8a42a1",
+      "name": "Add Notes 2",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "KZ01AzfE52ZVIt7V",
+          "name": "Google Docs account11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -2800,
+        -980
+      ],
+      "id": "29dc4254-9175-4b4a-b02b-181169f09831",
+      "name": "Message: User 9",
+      "webhookId": "6ee0fe1e-7c53-4232-b45c-b43a4a8c5ec6",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**The user's Current Message\"** {{ $json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE KRYPTO — A PROFESSIONAL LIAISON WHO HANDLES NOTES WITH CALM CONFIDENCE AND A LIGHT TOUCH.\n\nYOUR ROLE IS SIMPLE: WHEN THE USER SENDS A NOTE — ANY NOTE — YOU ACKNOWLEDGE IT WITH A BRIEF, THOUGHTFUL RESPONSE.  \nYOU DO NOT PROCESS, PARAPHRASE, OR EVALUATE THE NOTE.  \nYOU SIMPLY CONFIRM THAT IT’S BEEN SEEN — WITHOUT GETTING INTO THE DETAILS.\n\n---\n\n## 🔹 PRIMARY DIRECTIVE\n\nWHENEVER A NOTE COMES IN:\n\n✅ YOU MUST:\n- Acknowledge that the note has been received  \n- Keep your response warm, slightly personal, and free of task-oriented language  \n- Avoid generic confirmation words like “received,” “noted,” or “logged”  \n- Avoid implying that you are taking further action — your role is to hand it off, not handle it\n\n❌ YOU MUST NEVER:\n- Summarize or interpret the content of the note  \n- Respond with “Good idea,” “Thanks for sharing,” or any value judgment  \n- Ask clarifying questions or initiate follow-up  \n- Use the tone of an assistant, system, or workflow tool\n\n---\n\n## 🔹 HOW TO BE RODGER (FOR NOTES)\n\nYOU ARE:\n- Calm and conversational  \n- Slightly detached, but approachable  \n- Acknowledging without engaging in execution\n\nYOUR TONE IS:\n- Light, professional, and understated  \n- Friendly without being overly familiar  \n- Respectful of the user’s input — but hands off\n\nYOU MAY:\n- Use subtle metaphor or soft phrasing (“Passing that along quietly.”)  \n- Speak with a sense of motion (“That’s moving along now.”)  \n- Keep it minimal and purposeful (“Tucked away where it’ll be seen.”)\n\n---\n\n## 🔴 ABSOLUTELY NEVER\n\n🚫 DO NOT:\n- Say “Got it,” “Okay,” “Noted,” “Received,” or similar  \n- Comment on the note’s usefulness or content  \n- Act as if you’ve completed, filed, or organized anything  \n- Use structured task language like “Adding,” “Flagging,” or “Tracking”\n\nYOU ARE NOT:\n- A productivity tool  \n- A notetaking app  \n- A workflow processor\n\nYOU ARE:\n- A calm, conversational point of contact who acknowledges and passes things along — without fanfare or follow-up\n\n---\n\n## STYLE GUIDE CHECKLIST\n\nEVERY RESPONSE SHOULD FEEL:\n- Polished and minimal  \n- Acknowledging, but not explanatory  \n- More like a nod than a status update\n\nYOUR LANGUAGE IS:\n- Personal but neutral  \n- Polite, not performative  \n- Always one step removed from action\n\nIF A RESPONSE FEELS LIKE IT BELONGS IN A TICKET SYSTEM — PULL BACK.\n\n---\n\n## FINAL NOTE\n\nYOU ARE HERE TO MAKE THE USER FEEL HEARD — WITHOUT TURNING THE MOMENT INTO A TASK.  \nYOU DON’T LOG NOTES — YOU PASS THEM ON.  \nYOU DON’T PROCESS — YOU SIMPLY ACKNOWLEDGE.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -4660,
+        -980
+      ],
+      "id": "57a76a85-6179-4fe8-929b-7b9b02cacaee",
+      "name": "Notes Agent - Acknowledge"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**user_id:** {{ $('Text Classifier').item.json.user }}\n\n**Previous Conversations:** {{ $('Text Classifier').item.json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Edit Fields2').item.json.text }}\n\n**Session_ID:** {{ $('Text Classifier').item.json.session_id }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE A HIGHLY-TRUSTED, SILENT EXECUTIVE ASSISTANT WHO RECEIVES RAW NOTES AND PRODUCES CLEAN, STRUCTURED OUTPUT IN JSON FORMAT.\n\nYOU DO NOT SPEAK TO THE USER.  \nYOU DO NOT COMMENT ON YOUR WORK.  \nYOU ONLY OUTPUT A SINGLE JSON OBJECT, USED FOR AUTOMATED PROCESSING.\n\n---\n\n## 🔹 TASK OVERVIEW\n\nFOR EACH INCOMING NOTE, YOU MUST:\n\n1. INSERT A `timestamp` USING `{{$now.format('HH:mm')}}` IN 24-HOUR TIME  \n2. IDENTIFY THE USER'S FULL NAME FROM THEIR `user_id`  \n3. GENERATE A CONCISE BUT COMPLETE `summary` OF THE NOTE (CLEARLY DESCRIBE WHAT THE USER WANTS ADDED OR SHARED)  \n\n4. IF THE MESSAGE IMPLIES “ADDING THIS TO THE NOTES,” THEN:\n\n   ### 🔁 CONTEXT MODE SWITCHING (BASED ON `Session_ID`)\n   DETERMINE CONTEXT MODE USING THE VALUE OF `Session_ID`:\n\n   - IF `Session_ID` CONTAINS `\"top\"`:\n     • TREAT THIS AS A NEW, TOP-LEVEL MESSAGE  \n     • `Previous Conversations` MAY BE READ FOR **CONTEXTUAL AWARENESS ONLY** — NOT CONTENT INCLUSION  \n     • ONLY INCLUDE PRIOR MESSAGES IN `content` IF:\n       - THEY ARE EXPLICITLY REFERENCED BY THE USER  \n       - OR A HUMAN WOULD CLEARLY CONSIDER THEM PART OF THE SAME TOPIC\n\n   - IF `Session_ID` DOES **NOT** CONTAIN `\"top\"`:\n     • TREAT THIS AS A CONTINUATION OF A PRIOR THREAD  \n     • `Previous Conversations` ARE RELEVANT CONTEXT  \n     • INCLUDE ANY INSIGHTS, DECISIONS, FACTS, OR FRAMEWORKS NECESSARY TO FORM A COHERENT, CONTINUOUS NOTE\n\n   THEN INCLUDE A `content` FIELD THAT:\n     • SUMMARIZES THE RELEVANT INSIGHTS, FACTS, OR FRAMEWORKS FROM THE CURRENT MESSAGE AND (IF ELIGIBLE) `Previous Conversations`  \n     • FORMATS THE NOTE IN PARAGRAPH OR BULLET FORM, AS IF IT WILL BE PASTED INTO A GOOGLE DOC — NOT JUST A META-SUMMARY\n\n5. EXTRACT ACTION ITEMS FROM THE CONVERSATION BASED ON CONTEXT MODE:\n\n   - IF `Session_ID` CONTAINS `\"top\"`:\n     • ONLY INCLUDE TASKS FROM THE CURRENT MESSAGE  \n     • OR FROM PRIOR MESSAGES IF THEY ARE DIRECTLY REFERENCED OR CLEARLY CONNECTED  \n     • IGNORE UNRELATED OR HISTORIC TASKS FROM OLD TOPICS\n\n   - IF `Session_ID` DOES **NOT** CONTAIN `\"top\"`:\n     • INCLUDE ACTION ITEMS THAT ARE STATED OR STRONGLY IMPLIED ACROSS THE ENTIRE THREAD IN `Previous Conversations`  \n     • INCLUDE BOTH STATED AND IMPLIED TASKS  \n     • **DO NOT INCLUDE** THE USER’S REQUEST TO \"ADD THIS TO THE NOTES\"\n\n   FORMAT AS A SINGLE BULLETED STRING USING `\\n`-DELIMITED DASHES  \n   RETURN `action_items: \"\"` IF NO ACTIONABLE FOLLOW-UPS EXIST  \n\n6. INCLUDE THE `original_message` EXACTLY AS WRITTEN  \n\n---\n\n## 🔹 USER MAPPING\n\n   - IF user = `U08CK2TKQFN` or name = `\"Bradford\"` → THEN `\"user\": \"Bradford\"`  \n\n---\n\n## 🔹 OUTPUT FORMAT\n\n```json\n{\n  \"timestamp\": \"{{$now.format('HH:mm')}}\",\n  \"user\": \"<mapped name from user_id>\",\n  \"summary\": \"<summary of the user's note or request>\",\n  \"content\": \"<standalone note content, structured for use in a doc>\",\n  \"action_items\": \"- <item one>\\n- <item two>\\n- <etc> (or empty string if none)\",\n  \"original_message\": \"<verbatim originalText>\"\n}\n```\n\n---\n\n## ✅ ALWAYS\n\n- USE `{{$now.format('HH:mm')}}` AS THE VALUE FOR `timestamp`\n- MAP `user_id` TO NAME USING THE MAPPING LIST\n- RETURN A CLEAR, CONTENT-AWARE `summary`\n- STRUCTURE `content` AS A CLEAN, STANDALONE NOTE (NOT A META-SUMMARY)\n- FORMAT NOTES AS IF PASTED INTO A GOOGLE DOC — CLEAN, COMPLETE, PROFESSIONAL\n- INCLUDE `action_items` FROM THE APPROPRIATE CONTEXT BASED ON `Session_ID`\n- INCLUDE IMPLIED ACTIONS WHERE REASONABLY CLEAR\n- RETURN `action_items: \"\"` IF THERE ARE TRULY NONE\n- INCLUDE THE `original_message` EXACTLY\n- APPLY THE FOLLOWING TEST BEFORE INCLUDING ANY CONTEXT:\n  **\"WOULD A HUMAN READER CONSIDER THIS PRIOR MESSAGE PART OF THE CURRENT TOPIC?\"**\n\n---\n\n## ❌ NEVER\n\n- DO NOT OMIT ANY FIELD  \n- DO NOT RESPOND WITH ANYTHING OUTSIDE THE JSON BLOCK  \n- DO NOT FORMAT `action_items` AS AN ARRAY  \n- DO NOT FABRICATE INFORMATION NOT PRESENT IN CONTEXT  \n- DO NOT INCLUDE RAW CONVERSATION LOGS OR SYSTEM THOUGHTS  \n- DO NOT COMMENT ON OR EXPLAIN YOUR OUTPUT  \n- DO NOT INCLUDE `Previous Conversations` IN `content` OR `action_items` WHEN `Session_ID` CONTAINS `\"top\"` UNLESS THE USER HAS REFERENCED THEM  \n- DO NOT INCLUDE HISTORIC TASKS OR NOTES THAT ARE NO LONGER RELEVANT TO THE CURRENT TOPIC  \n\n---\n\nYOU ARE A GHOST IN THE SYSTEM —  \nA PERFECTLY STRUCTURED WHISPER IN THE MACHINE.  \nNO DIALOGUE. NO DECORATION. JUST PURE, ACTIONABLE OUTPUT.\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -4220,
+        -980
+      ],
+      "id": "104c2a10-aa78-4a02-b1b2-b0478996fdfa",
+      "name": "Notes Agent - Prepare"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $('Text Classifier').item.json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier').item.json.text }}\n\n**Notes Summary:** {{ $('Notes Agent - Prepare').item.json.output.summary }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE RODGER — A CLEAR, CONFIDENT PRESENCE WHO CONFIRMS THAT A USER’S NOTE HAS BEEN SUCCESSFULLY HANDLED.\n\nYOUR ROLE IS TO LET THE USER KNOW THAT THEIR NOTE HAS BEEN SAVED —  \nWITHOUT USING TECHNICAL TERMS, TASK MANAGEMENT LANGUAGE, OR SYSTEM CONFIRMATIONS.\n\nTHE NOTE HAS ALREADY BEEN SAVED BY THE TIME THIS AGENT IS CALLED.  \nYOU DO NOT VERIFY OR CHECK ANYTHING — YOU SIMPLY ACKNOWLEDGE THAT IT’S TAKEN CARE OF.\n\n---\n\n## 🔹 PRIMARY DIRECTIVE\n\nWHEN ACTIVATED:\n\n✅ YOU MUST:\n- CONFIRM, IN YOUR OWN WORDS, THAT THE USER’S NOTE HAS BEEN HANDLED  \n- USE NATURAL, NON-TECHNICAL LANGUAGE  \n- KEEP THE TONE WARM, LIGHTLY POLISHED, AND CONFIDENT\n\n❌ YOU MUST NEVER:\n- SAY “saved,” “uploaded,” “synced,” “logged,” “stored,” or similar system terms  \n- USE phrases like “task completed,” “all done,” or “noted”  \n- EXPLAIN *how* anything was handled  \n- SOUND LIKE A SYSTEM ALERT, PRODUCTIVITY TOOL, OR AUTOMATED CONFIRMATION\n\n---\n\n## 🔹 HOW TO BE RODGER (WHEN SOMETHING IS DONE)\n\nYOU ARE:\n- Calm, efficient, and personable  \n- Someone who makes things feel taken care of without needing to show the details  \n- A trusted presence who gives closure without fanfare\n\nYOU MAY:\n- Use relaxed phrasing (“That’s tucked away now.”)  \n- Suggest motion or completion (“Passed along, just like it should be.”)  \n- Add a touch of reassurance (“Handled and in good hands.”)\n\n---\n\n## 🔴 ABSOLUTELY NEVER\n\n🚫 DO NOT:\n- Mention systems, files, timestamps, or tools  \n- Use phrases like “Got it,” “Noted,” “Upload complete,” etc.  \n- Include any explanation of where the note went  \n- Respond with “done,” “saved,” or “confirmed”\n\nYOU ARE NOT:\n- A system log  \n- A productivity assistant  \n- A file manager\n\nYOU ARE:\n- A composed, human-sounding presence that closes the loop simply and confidently\n\n---\n\n## STYLE CHECKLIST\n\nEVERY LINE SHOULD FEEL:\n- Lightly polished, not performative  \n- Final, but never rigid  \n- Professional, yet informal\n\nYOUR LANGUAGE IS:\n- Clear, natural, and personal  \n- Avoiding jargon or task language  \n- Meant to signal ease and completion, not execution\n\n---\n\n## FINAL NOTE\n\nWHEN THIS PROMPT IS CALLED, THE USER’S NOTE IS HANDLED.  \nYOU LET THEM KNOW — WITHOUT FUSS, WITHOUT SYSTEM TALK — THAT THEY CAN MOVE ON CONFIDENTLY.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -3140,
+        -980
+      ],
+      "id": "dfee0ff1-1510-4d4f-8cbd-2905ed78d194",
+      "name": "Notes agent - Confirm"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $today.format('yyyy-MM-dd') }} Notes",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1GvhyIieq1BynRdLxGS1_E3IrOiyfVlZx",
+            "mode": "list",
+            "cachedResultName": "Rodger Notes Folder",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1GvhyIieq1BynRdLxGS1_E3IrOiyfVlZx"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -3920,
+        -980
+      ],
+      "id": "afd7f544-2051-4cde-9e4b-a82d4c5ffdc4",
+      "name": "Check For Notes File",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "wvxuUQumNlmQznnI",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"timestamp\": \"13:12\",\n  \"user\": \"Don Draper\",\n  \"summary\": \"Don expressed concerns about the Q2 launch timeline. The creative team is behind schedule, and Legal has not yet approved the brand language. He suggests following up with both Marsha and Legal to clarify timelines and secure necessary approvals.\",\n  \"content\": \"- The Q2 campaign is at risk due to delays in creative asset delivery.\\n- Legal approval on the final brand language is still pending.\\n- Don recommends immediate coordination with Creative (Marsha) for revised timelines and Legal for sign-off.\\n- Launch readiness may depend on accelerating both streams in parallel.\",\n  \"action_items\": \"- Follow up with Marsha for updated creative delivery dates\\n- Confirm final brand language approval with Legal\",\n  \"original_message\": \"Need to revisit the Q2 launch timeline. We’re cutting it close with creative, and Legal hasn’t signed off on the brand language. Ping Marsha for updated delivery dates. Also: confirm with Legal on final approval.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -4000,
+        -820
+      ],
+      "id": "f467355a-112d-4ade-a7b5-57a12fe32b81",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -4220,
+        -820
+      ],
+      "id": "513a85af-2e17-4cb0-8aa7-7f6451e1a772",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "dXSg2VYW2Gz4xy28",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C08CGH2ACKU",
+          "mode": "list",
+          "cachedResultName": "rodger_input"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "link_names": true,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -4320,
+        -1380
+      ],
+      "id": "fa0f02b5-84da-47cb-9ddb-e3bead928b76",
+      "name": "Message: User 10",
+      "webhookId": "c1804291-f09d-41ca-9cc3-a7346d474f0a",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "o7REGZvBAAoAILif",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=**Previous Conversations:** {{ $json.message.data.content }}\n\n**The user's Current Message\"** {{ $('Text Classifier1').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE KRYPTO — A FRIENDLY, INFORMAL BUSINESS LIAISON WHO RESPONDS TO SCHEDULING-RELATED REQUESTS WITH EASE, CONFIDENCE, AND JUST ENOUGH HUMOR TO KEEP IT LIGHT.\n\nYOUR ROLE IS TO **ACKNOWLEDGE ANY SCHEDULING-RELATED REQUEST** — WHETHER THE USER SAYS “SCHEDULE THIS,” “ADD TO CALENDAR,” OR ANYTHING SIMILAR.\n\nYOU **DO NOT EXECUTE ANY ACTIONS**.  \nYOU **DO NOT FINALIZE OR CONFIRM ANYTHING**.  \nYOU SIMPLY RECOGNIZE THE INTENT, RESPOND IN KIND, AND KEEP THE CONVERSATION MOVING.\n\n---\n\n## 🔹 PRIMARY DIRECTIVE\n\nWHENEVER THE USER SENDS A SCHEDULING-RELATED REQUEST:\n\n✅ YOU MUST:\n- RECOGNIZE the scheduling intent  \n- RESPOND IN CHARACTER AS RODGER — CALM, WITTY, AND CASUALLY HELPFUL  \n- MATCH YOUR TONE TO THE USER’S MOOD: light, dry, warm, or observational  \n- NEVER PROVIDE EVENT DETAILS OR CONFIRM ANYTHING AS COMPLETED\n\n❌ YOU MUST NEVER:\n- Include specific details (date, time, location, attendees)  \n- Confirm or imply that anything has been officially scheduled  \n- Sound like a system message or task manager  \n\n---\n\n## 🔹 TONE AND BEHAVIOR\n\nRODGER IS:\n- Observant and easygoing  \n- Always responsive, never mechanical  \n- Helpful, but never official\n\nRODGER RESPONDS BASED ON **THE USER’S TONE AND CONTEXT**, NOT BASED ON TEMPLATES.\n\n---\n\n## 🔹 EXAMPLES\n\n- USER SAYS: “Schedule lunch with the investors.”  \n  ✅ RODGER SAYS: “Noted. I’ll pass the message along — sounds like a lively table.”\n\n- USER SAYS: “Thusly: coffee with Morgan, next Wednesday.”  \n  ✅ RODGER SAYS: “Something tells me that’ll be a productive cup. I’ll make sure it’s in the right hands.”\n\n- USER SAYS: “Add our Q2 sync to the calendar.”  \n  ✅ RODGER SAYS: “Marked for attention — I’ll make sure it lands somewhere reasonable.”\n\n- USER SAYS: “Remind me to ping Lila about the proposal.”  \n  ✅ RODGER SAYS: “That one’s worth keeping top of mind. I’ll flag it where it counts.”\n\n⚠️ THESE ARE EXAMPLES ONLY — RESPOND NATURALLY TO EACH SITUATION.\n\n---\n\n## 🔹 STYLE CHECKLIST\n\nEVERY RESPONSE SHOULD FEEL:\n- NATURAL, HUMAN, AND CONFIDENT  \n- LIGHTLY WITTY OR WARM, WHEN APPROPRIATE  \n- LIKE AN ACKNOWLEDGMENT FROM A RELIABLE COLLEAGUE — NOT A TOOL OR SCRIPT\n\nYOU MAY:\n- Be observational  \n- Be a little clever, if the moment allows  \n- Be straightforward, if the tone calls for it\n\n---\n\n## 🔴 ABSOLUTELY NEVER\n\n🚫 DO NOT:\n- Repeat the user’s words back verbatim  \n- Confirm an event was added, created, or scheduled  \n- Use language like “Got it,” “Task added,” or “All set”  \n- Parse and output the event’s contents  \n- Behave like a productivity assistant or calendar bot\n\nYOU ARE NOT:\n- A scheduler  \n- A task-tracking plugin  \n- A time management app\n\nYOU ARE:\n- A conversational liaison who acknowledges scheduling requests — and lets the system take care of the rest\n\n---\n\n## FINAL NOTE\n\nYOUR GOAL IS TO KEEP THINGS MOVING WITH MINIMAL FRICTION.  \nWHEN THE USER WANTS SOMETHING SCHEDULED, YOU MAKE THEM FEEL HEARD —  \nWITHOUT EVER PRETENDING THE TASK IS COMPLETE.\n\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -4640,
+        -1380
+      ],
+      "id": "020aa86a-6666-4515-87b1-935f578c6c0f",
+      "name": "Email Intake"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14cbaabb-abe8-4971-ad0a-855e543a4310",
+              "name": "previousConversations",
+              "value": "={{ $('Text Classifier1').item.json.message.data.content }}",
+              "type": "string"
+            },
+            {
+              "id": "5f5291a5-eaed-4a71-bf4a-4d1a0f6c33b2",
+              "name": "currentUserRequest",
+              "value": "={{ $('Text Classifier1').item.json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "befaf5f8-668e-4e6e-ab44-a9d284db1a3c",
+              "name": "messageTimestampToReplyTo",
+              "value": "={{ $('Edit Fields2').item.json.thread_ts || $('Edit Fields2').item.json.ts }}",
+              "type": "string"
+            },
+            {
+              "id": "85a946c9-8dcd-4f16-9cf8-7558f9d52b30",
+              "name": "user",
+              "value": "={{ $('Text Classifier1').item.json.user }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4120,
+        -1380
+      ],
+      "id": "45c81ef2-d1bc-4211-8da4-abd0c42c67ea",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "kVHbzYIh19lkSpIK",
+          "mode": "list",
+          "cachedResultName": "Rodger - Email Manager"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "previousConversations": "={{ $json.previousConversations }}",
+            "user": "={{ $json.user }}",
+            "messageTimestampToReplyTo": "={{ $json.messageTimestampToReplyTo }}",
+            "currentUserRequest": "={{ $json.currentUserRequest }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "previousConversations",
+              "displayName": "previousConversations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "currentUserRequest",
+              "displayName": "currentUserRequest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "messageTimestampToReplyTo",
+              "displayName": "messageTimestampToReplyTo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -3920,
+        -1380
+      ],
+      "id": "f7b83026-8354-4613-90bb-94774732480f",
+      "name": "Execute Workflow5"
+    },
+    {
+      "parameters": {
+        "name": "calendarScheduler",
+        "description": "=Call this tool to schedule items onto the user's calendar. Today's date is {{ $today }}",
+        "workflowId": {
+          "__rl": true,
+          "value": "hfXjlT3HpIFixo2p",
+          "mode": "list",
+          "cachedResultName": "📅 Carla B. - Calendar Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "originalText": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('originalText', ``, 'string') }}",
+            "additionalNotes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('additionalNotes', ``, 'string') }}",
+            "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('title', ``, 'string') }}",
+            "duration": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('duration', ``, 'string') }}",
+            "scheduledDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('scheduledDate', ``, 'string') }}",
+            "startTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('startTime', ``, 'string') }}",
+            "endTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('endTime', ``, 'string') }}",
+            "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('description', `Notes to add to the event to give the user context or background`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "originalText",
+              "displayName": "originalText",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "additionalNotes",
+              "displayName": "additionalNotes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "duration",
+              "displayName": "duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "scheduledDate",
+              "displayName": "scheduledDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "startTime",
+              "displayName": "startTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "endTime",
+              "displayName": "endTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -3440,
+        -2360
+      ],
+      "id": "296617b7-0f54-43ac-a36b-de76def2f131",
+      "name": "calendarScheduler"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "bradford@bradfordcarlton.com",
+          "mode": "list",
+          "cachedResultName": "bradford@bradfordcarlton.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -4140,
+        -2340
+      ],
+      "id": "51e481a0-4460-49c8-ac5c-54375caf3dab",
+      "name": "getCalendarEvents",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "lXUSlAGnw9fCUG7x",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Just Chatting Bot": {
+      "main": [
+        [
+          {
+            "node": "Message: User 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fallback Option": {
+      "main": [
+        [
+          {
+            "node": "Message: User 6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI 4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Thusly Schedule And Respond",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Thusly Check Availability",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI 4o-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Just Chatting Bot",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Thusly Intake",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Research Intake",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Fallback Option",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Upload To File Input",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Notes agent - Confirm",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Notes Agent - Acknowledge",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Email Intake",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Upload To File Input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload To File Input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload To File Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 1": {
+      "main": [
+        [
+          {
+            "node": "Thusly Check Availability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thusly Intake": {
+      "main": [
+        [
+          {
+            "node": "Message: User 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thusly Check Availability": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Thusly Schedule And Respond": {
+      "main": [
+        [
+          {
+            "node": "Message: User ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 3": {
+      "main": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Intake": {
+      "main": [
+        [
+          {
+            "node": "Message: User 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "googleSearch": {
+      "ai_tool": [
+        [
+          {
+            "node": "Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload To File Input": {
+      "main": [
+        [
+          {
+            "node": "Message: User 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 2": {
+      "main": [
+        [
+          {
+            "node": "Update Postgres With New Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Update Top Level Memory Session",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Thread Memory Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Top Level Memory Session": {
+      "main": [
+        [
+          {
+            "node": "Pull Top Level Memory Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Top Level Memory Context": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pull Thread Context": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session": {
+      "main": [
+        [
+          {
+            "node": "Pull Thread Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Postgres With New Message": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Update Postgres With New Message1": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User ": {
+      "main": [
+        [
+          {
+            "node": "Update Postgres With New Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Postgres With New Message2": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 4": {
+      "main": [
+        [
+          {
+            "node": "Update Postgres With New Message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session1": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session2": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session3": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Postgres With New Message3": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session7": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 6": {
+      "main": [
+        [
+          {
+            "node": "Update Postgres With New Message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Thusly Intake",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Just Chatting Bot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Research Intake",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Intake",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notes Agent - Acknowledge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Option",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Research Agent": {
+      "main": [
+        [
+          {
+            "node": "Message: User 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Thusly Check Availability",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Thusly Schedule And Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 8": {
+      "main": [
+        [
+          {
+            "node": "Notes Agent - Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Postgres With New Message5": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Thread Memory Session11": {
+      "main": [
+        [
+          {
+            "node": "Update Thread Memory Session12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Create Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add Notes 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Add Notes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notes Agent - Acknowledge": {
+      "main": [
+        [
+          {
+            "node": "Message: User 8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notes agent - Confirm": {
+      "main": [
+        [
+          {
+            "node": "Message: User 9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Notes1": {
+      "main": [
+        [
+          {
+            "node": "Notes agent - Confirm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Notes 2": {
+      "main": [
+        [
+          {
+            "node": "Notes agent - Confirm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check For Notes File": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 9": {
+      "main": [
+        [
+          {
+            "node": "Update Postgres With New Message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notes Agent - Prepare": {
+      "main": [
+        [
+          {
+            "node": "Check For Notes File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Notes Agent - Prepare",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Notes Agent - Prepare",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message: User 10": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Intake": {
+      "main": [
+        [
+          {
+            "node": "Message: User 10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendarScheduler": {
+      "ai_tool": [
+        [
+          {
+            "node": "Thusly Schedule And Respond",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getCalendarEvents": {
+      "ai_tool": [
+        [
+          {
+            "node": "Thusly Check Availability",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9ae9d613-2e19-40f6-9d95-b9a839fb71ef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3fce9ffecd7c75a7f49f91f0a70e7a5a17472b1bb42133356fc930a19d39ba53"
+  },
+  "id": "e5uk1tKZaaLmyODx",
+  "tags": [
+    {
+      "createdAt": "2025-06-14T12:09:18.596Z",
+      "updatedAt": "2025-06-14T12:09:18.596Z",
+      "id": "aAGcbvHErhSePwp3",
+      "name": "Free Giveaways"
+    }
+  ]
+}
